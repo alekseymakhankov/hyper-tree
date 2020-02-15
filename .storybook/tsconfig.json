@@ -1,35 +1,40 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
-    "allowSyntheticDefaultImports": true,
-    "module": "es2015",
+    "root": true,
+    "baseUrl": ".",
+    "outDir": "build",
+    "module": "esnext",
     "target": "es5",
-    "lib": ["es6", "dom"],
-    "sourceMap": true,
+    "lib": [
+      "es6",
+      "dom",
+      "es2015",
+      "es2016",
+      "es2017"
+    ],
     "allowJs": false,
     "jsx": "react",
+    "declaration": true,
     "moduleResolution": "node",
-    "rootDir": "../",
-    "outDir": "dist",
+    "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": false,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "declaration": true
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "types": [
+      "jest"
+    ],
   },
   "include": [
-    "src/**/*"
+    "./src/**/*.ts",
+    "./src/**/*.tsx"
   ],
   "exclude": [
-    "node_modules",
     "build",
-    "dist",
-    "scripts",
-    "acceptance-tests",
-    "webpack",
-    "jest",
-    "src/setupTests.ts",
-    "**/*/*.test.ts",
-    "examples"
+    "rollup.config.js",
+    "node_modules"
   ]
 }

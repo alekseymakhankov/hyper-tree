@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "outDir": "build",
     "module": "esnext",
     "target": "es5",
@@ -19,15 +20,10 @@
     "types": [
       "jest"
     ],
-    "typeRoots": [
-      "./types",
-      "./node_modules/@types"
-    ]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "node_modules/@types"
+    "./src/**/*.ts",
+    "./src/**/*.tsx"
   ],
-  "exclude": ["build", "rollup.config.js"]
+  "exclude": ["build", "rollup.config.js", "node_modules"]
 }

@@ -3,8 +3,7 @@ import { isFunction } from './helpers/typeCheckers'
 import { classnames } from './helpers/classnames'
 import { defaultProps } from './helpers/defaultProps'
 import { TreeNode } from './helpers/node'
-
-import './style.scss'
+import styles from './style.scss'
 
 interface HyperTextTreeViewCommonProps {
   setOpen?: (node: any) => void;
@@ -57,7 +56,7 @@ const renderVerticalLine = ({
   verticalLineStyles = defaultProps.verticalLineStyles,
 }: RenderVerticalLine) => (
   <div
-    className="vertical-line"
+    className={styles.verticalLine}
     style={{ marginLeft: getDepthPx(depth, depthGap), left: `${verticalLineOffset}px` }}
   >
     <svg
@@ -75,7 +74,7 @@ const renderVerticalLine = ({
         y1="0%"
         x2="0%"
         y2="100%"
-        className="vertical-svg-line"
+        className={styles.verticalSvgLine}
         style={verticalLineStyles}
       />
     </svg>
@@ -90,7 +89,7 @@ const renderHorizontalLine = ({
   gapMode,
 }: RenderHorizontalLine) => (
   <div
-    className="horizontal-line"
+    className={styles.horizontalLine}
     style={{
       width: `${depthGap - verticalLineOffset}px`,
       left: gapMode === 'padding'
@@ -116,7 +115,7 @@ const renderHorizontalLine = ({
 )
 
 const renderLoader = () => (
-  <svg className="loading-spinner" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 48 48">
+  <svg className={styles.loadingSpinner} xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 48 48">
     <g fill="none">
       <path
         id="track"
@@ -137,7 +136,7 @@ const renderLoader = () => (
 
 const renderArrow = (onClick: (e: React.MouseEvent<HTMLOrSVGElement>) => void) => (
   <svg
-    className="hyper-node-icon"
+    className={styles.hyperNodeIcon}
     xmlns="http://www.w3.org/2000/svg"
     width="10"
     height="10"
@@ -184,9 +183,9 @@ const HyperTreeNode = React.forwardRef(({
     <div
       className={
         classnames({
-          'hyper-node': true,
-          opened: node.options.opened && !!node.hasChildren(),
-          selected: node.isSelected(),
+          [styles.hyperNode]: true,
+          [styles.opened]: node.options.opened && !!node.hasChildren(),
+          [styles.selected]: node.isSelected(),
         })
       }
       style={{ [offsetProp]: getDepthPx(depth, depthGap), ...additionStyles }}
@@ -221,7 +220,7 @@ const HyperTreeViewChild = ({
   }
   return (
     <div
-      className={classnames({ child: true, collapsed: !node.options.opened })}
+      className={classnames({ [styles.child]: true, [styles.collapsed]: !node.options.opened })}
     >
       <HyperTreeView
         data={node.getChildren()}
@@ -246,9 +245,9 @@ const HyperTreeViewChild = ({
 
 const HyperTreeView = React.forwardRef(
   ({ data, depth = 0, ...props }: HyperTextTreeViewProps, ref: React.Ref<HTMLDivElement>) => (
-    <div className="hyper-tree-view">
+    <div className={styles.hyperTreeView}>
       {data.map((currentNode: any) => (
-        <div className="hyper-tree-node-wrapper" key={currentNode.id}>
+        <div className={styles.hyperTreeNodeWrapper} key={currentNode.id}>
           <HyperTreeNode node={currentNode} depth={depth} ref={ref} {...props} />
           <HyperTreeViewChild node={currentNode} depth={depth} {...props} />
         </div>
