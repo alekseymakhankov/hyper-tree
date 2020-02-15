@@ -32,6 +32,7 @@ export default {
       inject: true,
       modules: {
         generateScopedName: '[name]__[local]___[hash:base64:5]',
+        camelCase: true,
       },
     }),
     url(),
