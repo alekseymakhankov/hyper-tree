@@ -1,0 +1,107 @@
+.hyper-tree-view {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 12px;
+  .hyper-tree-node-wrapper {
+    .hyper-node {
+      position: relative;
+      display: flex;
+      align-items: center;
+      transition: all 0.2s ease;
+      opacity: 1;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgb(184, 222, 245);
+      }
+
+      .node-line {
+        position: absolute;
+        left: -12px;
+        top: 0;
+        bottom: 0;
+        margin: auto 0;
+        height: 1px;
+        width: 10px;
+        background-color: black;
+      }
+
+      &.opened {
+        .hyper-node-icon {
+          transform: rotate(90deg);
+        }
+      }
+
+      .hyper-node-icon {
+        transition: transform 0.1s ease;
+        cursor: pointer;
+        margin-right: 4px;
+
+        .chevron-icon {
+          max-height: 10px;
+        }
+      }
+
+      &.selected {
+        background-color: rgb(184, 222, 245);
+      }
+    }
+
+    .child {
+      position: relative;
+      transition: all 0.2s cubic-bezier(0, 1, 0, 1);
+      // overflow: hidden;
+      transform-origin: top;
+      transform-style: flat;
+      max-height: 9999px;
+      transform: scaleY(1);
+
+      &.collapsed {
+        transform: scaleY(0);
+        max-height: 0;
+      }
+
+      .line {
+        position: absolute;
+        top: 0;
+        left: 8px;
+        width: 1px;
+        height: 100%;
+        background-color: black;
+      }
+    }
+  }
+
+  .vertical-line {
+    position: absolute;
+    top: 0;
+    transition: all 0.2s cubic-bezier(0, 1, 0, 1);
+    animation-fill-mode: backwards;
+
+    .vertical-svg-line {
+      transition: all 0.2s cubic-bezier(0, 1, 0, 1);
+      animation-fill-mode: backwards;
+    }
+  }
+
+  .horizontal-line {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+}
+
+.loading-spinner {
+  transform: scale(0.3);
+  animation: loading-spinner 1s linear infinite;
+  margin-right: 4px;
+}
+
+@keyframes loading-spinner {
+  from {
+    transform: rotate(0deg)
+  }
+  to {
+    transform: rotate(360deg)
+  }
+}
