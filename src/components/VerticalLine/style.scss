@@ -1,0 +1,11 @@
+.vertical-line {
+  position: absolute;
+  top: 0;
+  transition: all 0.2s cubic-bezier(0, 1, 0, 1);
+  animation-fill-mode: backwards;
+
+  .vertical-svg-line {
+    transition: all 0.2s cubic-bezier(0, 1, 0, 1);
+    animation-fill-mode: backwards;
+  }
+}

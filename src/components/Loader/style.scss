@@ -1,0 +1,14 @@
+.loading-spinner {
+  transform: scale(0.3);
+  animation: loading-spinner 1s linear infinite;
+  margin-right: 4px;
+}
+
+@keyframes loading-spinner {
+  from {
+    transform: rotate(0deg)
+  }
+  to {
+    transform: rotate(360deg)
+  }
+}
