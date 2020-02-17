@@ -1,6 +1,7 @@
 import { useMemo, useCallback, useState } from 'react'
-import { TreeView, IFilter, ISort, TreeNode, InsertChildType } from './node'
+import { TreeView, IFilter, ISort, TreeNode, InsertChildType, IData } from './node'
 import { treeHandlers } from './treeHandlers'
+import { isFunction } from './typeCheckers'
 
 export interface IUseTreeState {
   id: string;
@@ -64,17 +65,24 @@ export const useTreeState = ({ id, data, filter, sort, defaultOpened, multipleSe
     forceUpdate()
   }, [treeView, forceUpdate])
 
+  const setRawChildren = useCallback((parent: TreeNode, children: IData[], type?: InsertChildType, reset?: boolean) => {
+    setChildren(parent, treeView.staticEnhance(children, parent), type, reset)
+  }, [setChildren, treeView])
+
   const setOpen = useCallback((node: TreeNode) => {
     if (!node) {
       return
     }
-    if (node.data.getChildren && !node.isOpened()) {
+    if (node.data.getChildren && isFunction(node.data.getChildren) && !node.isOpened()) {
       setLoading(node, true)
-      node.data.getChildren().then((asyncData: any) => {
-        setLoading(node, false)
-        node.setOpened(true)
-        setChildren(node, treeView.staticEnhance(asyncData, node), 'last', true)
-      })
+      const result = node.data.getChildren({ node })
+      if (result.then) {
+        result.then((asyncData: IData[]) => {
+          setLoading(node, false)
+          node.setOpened(true)
+          setRawChildren(node, asyncData, 'last', true)
+        })
+      }
     } else {
       node.setOpened(!node.isOpened())
       treeView.enhanceNodes()
@@ -82,7 +90,7 @@ export const useTreeState = ({ id, data, filter, sort, defaultOpened, multipleSe
     forceUpdate(() => {
       treeView.enhanceNodes()
     })
-  }, [forceUpdate, treeView, setLoading, setChildren])
+  }, [forceUpdate, treeView, setLoading, setRawChildren])
 
 
   treeHandlers
@@ -91,6 +99,7 @@ export const useTreeState = ({ id, data, filter, sort, defaultOpened, multipleSe
     .safeUpdateHandler(id, 'setOpen', setOpen)
     .safeUpdateHandler(id, 'setLoading', setLoading)
     .safeUpdateHandler(id, 'setSelected', setSelected)
+    .safeUpdateHandler(id, 'setRawChildren', setRawChildren)
     .safeUpdateHandler(id, 'setChildren', setChildren)
 
   const handlers = useMemo(() => ({
@@ -98,7 +107,8 @@ export const useTreeState = ({ id, data, filter, sort, defaultOpened, multipleSe
     setLoading,
     setSelected,
     setChildren,
-  }), [setOpen, setLoading, setSelected, setChildren])
+    setRawChildren,
+  }), [setOpen, setLoading, setSelected, setChildren, setRawChildren])
 
   return {
     instance: treeView,
