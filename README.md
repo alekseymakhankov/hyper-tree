@@ -41,7 +41,7 @@ $ yarn add react-hyper-tree
 
 ```javascript
 import React from 'react'
-import Tree from 'react-hyper-tree'
+import Tree, { useTreeState } from 'react-hyper-tree'
 
 const data = {
   id: 1,
