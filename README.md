@@ -23,6 +23,8 @@ I want to introduce you to an awesome react component for displaying tree data s
 
 ## Live demo (under development)
 
+### Check also [react-hyper-modal](https://www.npmjs.com/package/react-hyper-modal) library
+
 ## <a id="installation"></a>Installation
 
 ###### You can use [![npm](https://api.iconify.design/logos:npm.svg?height=14)](https://www.npmjs.com/get-npm) or [![yarn](https://api.iconify.design/logos:yarn.svg?height=14)](https://yarnpkg.com/lang/en/docs/install) package managers
