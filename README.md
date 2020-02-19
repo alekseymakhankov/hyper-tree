@@ -17,6 +17,7 @@ I want to introduce you to an awesome react component for displaying tree data s
   - [Node API](#node-api)
   - [Global State Manager (GSM)](#global-state-manager)
   - [Async children](#async-children)
+  - [Default properties](#default-props)
 - [Road map](#road-map)
 - [Contributing](#contributing)
 - [License](#license)
@@ -117,6 +118,8 @@ filter | function to filter tree nodes
 sort | function to sort tree nodes
 defaultOpened | if true, all parent will be opened
 multipleSelect | if true, a several nodes can be selected
+idKey | set the data id key, e.g. 'id'
+childrenKey | set the children key, e.g. 'children'
 
 ### useTreeState output
 
@@ -253,6 +256,23 @@ const getChildren = () => new Promise((resolve) => setTimeout(() => resolve([
 
 You can also fire any events like redux-actions in the getChildren function. In this case you can set the children by the *GSM*
 
+
+## <a id="default-props"></a>Default properties
+
+```typescript
+export const defaultProps = {
+  filter: () => true,
+  opened: [],
+  displayedName: (node: TreeNode) => node.data.name,
+  depthGap: 20,
+  verticalLineOffset: 5,
+  verticalLineStyles: { stroke: 'black', strokeWidth: 1, strokeDasharray: '1 1' },
+  horizontalLineStyles: { stroke: 'black', strokeWidth: 1, strokeDasharray: '1 1' },
+  gapMode: 'margin',
+  idKey: 'id',
+  childrenKey: 'children',
+}
+```
 
 ## <a id="road-map"></a> Road map
 - Coverage by tests

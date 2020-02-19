@@ -133,7 +133,7 @@ const HyperTreeViewChild = ({
   }
   return (
     <div
-      className={classnames({ [styles.child]: true, [styles.collapsed]: !node.options.opened })}
+      className={classnames({ [styles.child]: true, [styles.collapsed]: !node.isOpened() })}
     >
       <HyperTreeView
         data={node.getChildren()}

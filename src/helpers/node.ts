@@ -12,6 +12,8 @@ export interface IDataOptions {
   currentChilrenCount: number;
   parent?: TreeNode;
   loading: boolean;
+  idKey: string;
+  childrenKey: string;
 }
 
 export interface IData {
@@ -33,6 +35,8 @@ export interface Options {
   sort: ISort;
   defaultOpened?: boolean | number[];
   enhance?: boolean;
+  idKey: string;
+  childrenKey: string;
 }
 
 export type InsertChildType = 'first' | 'last'
@@ -47,7 +51,7 @@ export class TreeNode implements ITreeNode {
 
   constructor(data: IData, options: IDataOptions, children?: TreeNode[]) {
     this.data = data
-    this.id = data.id || uuid()
+    this.id = data[options.idKey] || uuid()
     this.options = options
     this.children = children
   }
@@ -128,12 +132,12 @@ export class TreeNode implements ITreeNode {
 
 export class TreeView {
   hash: string;
-  id: string
-  data: any[]
-  options: Options
-  enhancedData: TreeNode[]
-  flatData: Array<TreeNode | any>
-  ids: number[]
+  id: string;
+  data: any[];
+  options: Options;
+  enhancedData: TreeNode[];
+  flatData: Array<TreeNode | any>;
+  ids: number[];
 
   static instance: TreeView
 
@@ -220,20 +224,20 @@ export class TreeView {
 
   private _addChildren(data: any[], parentId: number | string, node: IData[], insertType: InsertChildType) {
     for (let i = 0; i < data.length; i += 1) {
-      if (data[i].id === parentId) {
+      if (data[i][this.options.idKey] === parentId) {
         switch (insertType) {
           case 'first': {
-            data[i].children = [...node, ...(data[i].children || [])]
+            data[i][this.options.childrenKey] = [...node, ...(data[i][this.options.childrenKey] || [])]
             return
           }
           case 'last': {
-            data[i].children = [...(data[i].children || []), ...node]
+            data[i][this.options.childrenKey] = [...(data[i][this.options.childrenKey] || []), ...node]
             return
           }
           default: return
         }
-      } else if (data[i].children && data[i].children.length !== 0) {
-        this._addChildren(data[i].children, parentId, node, insertType)
+      } else if (data[i][this.options.childrenKey] && data[i][this.options.childrenKey].length !== 0) {
+        this._addChildren(data[i][this.options.childrenKey], parentId, node, insertType)
         return
       }
       return
@@ -242,13 +246,13 @@ export class TreeView {
 
   private _addSibling(data: any[], nodeId: number | string, node: IData, insertType: InsertSiblingType) {
     for (let i = 0; i < data.length; i += 1) {
-      if (data[i].children && data[i].children.length !== 0) {
-        const index = data[i].children.findIndex((child: any) => child.id === nodeId)
+      if (data[i][this.options.childrenKey] && data[i][this.options.childrenKey].length !== 0) {
+        const index = data[i][this.options.childrenKey].findIndex((child: any) => child[this.options.idKey] === nodeId)
         if (index > -1) {
-          data[i].children.splice(insertType === 'before' ? index : index + 1, 0, node)
+          data[i][this.options.childrenKey].splice(insertType === 'before' ? index : index + 1, 0, node)
           return
         }
-        this._addSibling(data[i].children, nodeId, node, insertType)
+        this._addSibling(data[i][this.options.childrenKey], nodeId, node, insertType)
       }
       return
     }
@@ -269,8 +273,9 @@ export class TreeView {
   private _enhance(tree: any[], options: Options, parentNode?: TreeNode): TreeNode[] {
     const result: TreeNode[] = []
     this.sort(tree).filter(this.options.filter).forEach((child: IData) => {
-      const filteredChildren: TreeNode[] = child.children && child.children.length !== 0
-        ? child.children.filter(this.options.filter)
+      const filteredChildren: TreeNode[] = child[this.options.childrenKey]
+        && child[this.options.childrenKey].length !== 0
+        ? child[this.options.childrenKey].filter(this.options.filter)
         : []
       const newChild: TreeNode = new TreeNode(
         child,
@@ -285,6 +290,8 @@ export class TreeView {
           childrenCount: 0,
           currentChilrenCount: 0,
           loading: false,
+          idKey: this.options.idKey,
+          childrenKey: this.options.childrenKey,
         },
       )
 
@@ -303,7 +310,7 @@ export class TreeView {
   private _staticEnhance(tree: any[], parentNode?: TreeNode): TreeNode[] {
     const result: TreeNode[] = []
     tree.forEach((child: IData) => {
-      const curentChildren = child.children || []
+      const curentChildren = child[this.options.childrenKey] || []
       const newChild: TreeNode = new TreeNode(
         child,
         {
@@ -317,6 +324,8 @@ export class TreeView {
           childrenCount: 0,
           currentChilrenCount: 0,
           loading: false,
+          idKey: this.options.idKey,
+          childrenKey: this.options.childrenKey,
         },
       )
 
@@ -357,29 +366,32 @@ export class TreeView {
 
   private _remove(data: any[], parentNode: any, nodeId: number | string, leaveChildren?: RemoveType) {
     for (let i = 0; i < data.length; i += 1) {
-      if (data[i].id === nodeId) {
+      if (data[i][this.options.idKey] === nodeId) {
         const nodeToRemove = data[i]
         data.splice(i, 1)
-        if (parentNode && nodeToRemove.children && nodeToRemove.children.length !== 0 && leaveChildren) {
-          parentNode.children = leaveChildren === 'start'
-            ? [...nodeToRemove.children, ...(parentNode.children || [])]
-            : [...(parentNode.children || []), ...nodeToRemove.children]
+        if (parentNode
+          && nodeToRemove[this.options.childrenKey]
+          && nodeToRemove[this.options.childrenKey].length !== 0
+          && leaveChildren) {
+          parentNode[this.options.childrenKey] = leaveChildren === 'start'
+            ? [...nodeToRemove[this.options.childrenKey], ...(parentNode[this.options.childrenKey] || [])]
+            : [...(parentNode[this.options.childrenKey] || []), ...nodeToRemove[this.options.childrenKey]]
         }
         return
       }
-      if (data[i].children && data[i].children.length !== 0) {
-        this._remove(data[i].children, data[i], nodeId, leaveChildren)
+      if (data[i][this.options.childrenKey] && data[i][this.options.childrenKey].length !== 0) {
+        this._remove(data[i][this.options.childrenKey], data[i], nodeId, leaveChildren)
       }
     }
   }
 
   private _getNodeById(id: string | number, tree: any[]): any {
     for (let i = 0; i < tree.length; i += 1) {
-      if (tree[i].id === id) {
+      if (tree[i][this.options.idKey] === id) {
         return tree[i]
       }
-      if (tree[i].children && tree[i].children.length !== 0) {
-        return this._getNodeById(id, tree[i].children)
+      if (tree[i][this.options.childrenKey] && tree[i][this.options.childrenKey].length !== 0) {
+        return this._getNodeById(id, tree[i][this.options.childrenKey])
       }
     }
     return null

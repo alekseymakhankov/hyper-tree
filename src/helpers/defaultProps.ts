@@ -9,4 +9,6 @@ export const defaultProps = {
   verticalLineStyles: { stroke: 'black', strokeWidth: 1, strokeDasharray: '1 1' },
   horizontalLineStyles: { stroke: 'black', strokeWidth: 1, strokeDasharray: '1 1' },
   gapMode: 'margin' as const,
+  idKey: 'id',
+  childrenKey: 'children',
 }

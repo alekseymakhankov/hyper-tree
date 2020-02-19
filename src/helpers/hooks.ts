@@ -2,6 +2,7 @@ import { useMemo, useCallback, useState } from 'react'
 import { TreeView, IFilter, ISort, TreeNode, InsertChildType, IData } from './node'
 import { treeHandlers } from './treeHandlers'
 import { isFunction } from './typeCheckers'
+import { defaultProps } from './defaultProps'
 
 export interface IUseTreeState {
   id: string;
@@ -10,6 +11,8 @@ export interface IUseTreeState {
   sort?: ISort;
   defaultOpened?: boolean | number[];
   multipleSelect?: boolean;
+  idKey?: string;
+  childrenKey?: string;
 }
 
 const defaultOptions = {
@@ -32,19 +35,30 @@ const useForceUpdate = () => {
   return memoizedDispatch
 }
 
-export const useTreeState = ({ id, data, filter, sort, defaultOpened, multipleSelect }: IUseTreeState) => {
+export const useTreeState = ({
+  id,
+  data,
+  filter,
+  sort,
+  defaultOpened,
+  multipleSelect,
+  idKey = defaultProps.idKey,
+  childrenKey = defaultProps.childrenKey,
+}: IUseTreeState) => {
   const forceUpdate = useForceUpdate()
 
   const treeView = useMemo(() => new TreeView(
     id,
     Array.isArray(data) ? data : [data],
     {
+      idKey,
+      childrenKey,
       defaultOpened,
       enhance: true,
       filter: filter || defaultOptions.filter,
       sort: sort || defaultOptions.sort,
     },
-  ), [data, defaultOpened, filter, id, sort])
+  ), [data, defaultOpened, filter, id, sort, idKey, childrenKey])
 
   const setLoading = useCallback((node: TreeNode, loading?: boolean) => {
     node.setLoading(loading)
