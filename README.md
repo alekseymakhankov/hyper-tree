@@ -92,17 +92,17 @@ const MyTreeComponent = () => {
 
 Props | Description
 ------------ | -------------
-setOpen | open node children, provided by *handlers* prop
-setSelected | select node, provided by *handlers* prop
-displayedName | format node content, if you use default node renderer
-staticNodeHeight | set static height of node, otherwise dynamic height will be used
+setOpen? | open node children, provided by *handlers* prop
+setSelected? | select node, provided by *handlers* prop
+displayedName? | format node content, if you use default node renderer
+staticNodeHeight? | set static height of node, otherwise dynamic height will be used
 data | nodes data, provided by *required* prop
-depthGap | children indentation related to parent
-verticalLineOffset | vertical line offset related to parent
-verticalLineStyles | vertical line styles, [SVG](https://www.w3schools.com/html/html5_svg.asp) properties
-horizontalLineStyles | horizontal line styles, [SVG](https://www.w3schools.com/html/html5_svg.asp) properties
-gapMode | indentation mode
-renderNode | function to render your custom node
+depthGap? | children indentation related to parent
+verticalLineOffset? | vertical line offset related to parent
+verticalLineStyles? | vertical line styles, [SVG](https://www.w3schools.com/html/html5_svg.asp) properties
+horizontalLineStyles? | horizontal line styles, [SVG](https://www.w3schools.com/html/html5_svg.asp) properties
+gapMode? | indentation mode
+renderNode? | function to render your custom node
 
 ## <a id="use-tree-state"></a>useTreeState API
 
@@ -114,12 +114,12 @@ Property | Description
 ---|---
 id | tree id, required
 data | tree-like data
-filter | function to filter tree nodes
-sort | function to sort tree nodes
-defaultOpened | if true, all parent will be opened
-multipleSelect | if true, a several nodes can be selected
-idKey | set the data id key, e.g. 'id'
-childrenKey | set the children key, e.g. 'children'
+filter? | function to filter tree nodes
+sort? | function to sort tree nodes
+defaultOpened? | if true, all parent will be opened
+multipleSelect? | if true, a several nodes can be selected
+idKey? | set the data id key, e.g. 'id'
+childrenKey? | set the children key, e.g. 'children'
 
 ### useTreeState output
 
