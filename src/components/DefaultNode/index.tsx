@@ -1,20 +1,9 @@
 import * as React from 'react'
-import { TreeNode } from '../../helpers/node'
 import { isFunction } from '../../helpers/typeCheckers'
 import { defaultProps } from '../../helpers/defaultProps'
 import { Loader, Arrow } from '..'
+import { DefaultNodeProps } from '../../types'
 import styles from './style.scss'
-
-export type DefaultNodeProps = {
-  offsetProp?: string;
-  displayedName?: string | ((node: any) => string);
-  node: TreeNode;
-  onSelect: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void);
-  onToggle: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-  nodeRef?: React.Ref<HTMLDivElement>;
-  depth?: number;
-  depthGap?: number;
-}
 
 export const DefaultNode: React.FC<DefaultNodeProps> = ({
   displayedName = defaultProps.displayedName,

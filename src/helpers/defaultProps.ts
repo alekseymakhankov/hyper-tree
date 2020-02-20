@@ -1,14 +1,16 @@
 import { TreeNode } from './node'
+import { ClassesType } from '../types'
 
 export const defaultProps = {
-  filter: () => true,
-  opened: [],
-  displayedName: (node: TreeNode) => node.data.name,
+  childrenKey: 'children',
+  classes: {} as ClassesType,
   depthGap: 20,
+  displayedName: (node: TreeNode) => node.data.name,
+  filter: () => true,
+  gapMode: 'margin' as const,
+  horizontalLineStyles: { stroke: 'black', strokeWidth: 1, strokeDasharray: '1 1' },
+  idKey: 'id',
+  opened: [],
   verticalLineOffset: 5,
   verticalLineStyles: { stroke: 'black', strokeWidth: 1, strokeDasharray: '1 1' },
-  horizontalLineStyles: { stroke: 'black', strokeWidth: 1, strokeDasharray: '1 1' },
-  gapMode: 'margin' as const,
-  idKey: 'id',
-  childrenKey: 'children',
 }

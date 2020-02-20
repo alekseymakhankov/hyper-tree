@@ -92,17 +92,18 @@ const MyTreeComponent = () => {
 
 Props | Description
 ------------ | -------------
-setOpen? | open node children, provided by *handlers* prop
-setSelected? | select node, provided by *handlers* prop
-displayedName? | format node content, if you use default node renderer
-staticNodeHeight? | set static height of node, otherwise dynamic height will be used
+classes?| object with elements class names
 data | nodes data, provided by *required* prop
 depthGap? | children indentation related to parent
+displayedName? | format node content, if you use default node renderer
+gapMode? | indentation mode
+horizontalLineStyles? | horizontal line styles, [SVG](https://www.w3schools.com/html/html5_svg.asp) properties
+renderNode? | function to render your custom node
+setOpen? | open node children, provided by *handlers* prop
+setSelected? | select node, provided by *handlers* prop
+staticNodeHeight? | set static height of node, otherwise dynamic height will be used
 verticalLineOffset? | vertical line offset related to parent
 verticalLineStyles? | vertical line styles, [SVG](https://www.w3schools.com/html/html5_svg.asp) properties
-horizontalLineStyles? | horizontal line styles, [SVG](https://www.w3schools.com/html/html5_svg.asp) properties
-gapMode? | indentation mode
-renderNode? | function to render your custom node
 
 ## <a id="use-tree-state"></a>useTreeState API
 
@@ -112,21 +113,21 @@ useTreeState React hook includes the state management functionality. It prepares
 
 Property | Description
 ---|---
-id | tree id, required
-data | tree-like data
-filter? | function to filter tree nodes
-sort? | function to sort tree nodes
-defaultOpened? | if true, all parent will be opened
-multipleSelect? | if true, a several nodes can be selected
-idKey? | set the data id key, e.g. 'id'
 childrenKey? | set the children key, e.g. 'children'
+data | tree-like data
+defaultOpened? | if true, all parent will be opened
+filter? | function to filter tree nodes
+id | tree id, required
+idKey? | set the data id key, e.g. 'id'
+multipleSelect? | if true, a several nodes can be selected
+sort? | function to sort tree nodes
 
 ### useTreeState output
 
 Property | Description
 ---|---
-instance | tree view instance including all tree methods
 handlers | handlers to manipulate node state. *setOpen*, *setLoading*, *setSelected*, *setChildren*, *setRawChildren*
+instance | tree view instance including all tree methods
 required | includes enhanced tree structure
 
 Actually TreeView component is a renderer. It hasn't any functionality to manipulate of tree state.
@@ -135,21 +136,21 @@ Actually TreeView component is a renderer. It hasn't any functionality to manipu
 
 Method | Description | Typings
 ---|---|---
-getData | returns raw node data | () => any
-setData | sets node data | (data?: any) => void
 getChildren | returns node children or empty array | () => TreeNode[]
-setNodeChildren | insert node children | (children: TreeNode[], type?: InsertChildType, reset?: boolean) => TreeNode[]
-setChildren | a simple equivalent of setNodeChildren | (children: TreeNode[]) => void
-hasChildren | returns true if node has atleast one child | () => boolean
-setParent | set node parent | (parent?: TreeNode) => void
+getData | returns raw node data | () => any
 getFirstChild | returns the first child | () => TreeNode `|` null
 getLastChild | returns the last child | () => TreeNode `|` null
-setOpened | set node opened | (opened?: boolean) => void
-isOpened | returns true if node is opened | () => boolean
-setLoading | set node loading | (loading?: boolean) => void
+hasChildren | returns true if node has atleast one child | () => boolean
 isLoading | returns true if node is loading | () => boolean
-setSelected | set node selected | (selected?: boolean) => void
+isOpened | returns true if node is opened | () => boolean
 isSelected | returns true if node is selected | () => boolean
+setChildren | a simple equivalent of setNodeChildren | (children: TreeNode[]) => void
+setData | sets node data | (data?: any) => void
+setLoading | set node loading | (loading?: boolean) => void
+setNodeChildren | insert node children | (children: TreeNode[], type?: InsertChildType, reset?: boolean) => TreeNode[]
+setOpened | set node opened | (opened?: boolean) => void
+setParent | set node parent | (parent?: TreeNode) => void
+setSelected | set node selected | (selected?: boolean) => void
 
 ## <a id="global-state-manager"></a>Global state manager
 
@@ -198,11 +199,11 @@ Every tree has a default set of methods to manipulate the data
 Method | Descriptipn | Typings
 ---|---|---
 rerender | rerender the tree component | (callback? () => void) => void
-setOpen | set opened property | (node: TreeNode) => void
 setLoading | set loading property | (node: TreeNode, loading?: boolean) => void
-setSelected | set selected property | (node: TreeNode, selected?: boolean) => void
+setOpen | set opened property | (node: TreeNode) => void
 setRawChildren | set node children, use it if you have a raw children data | (parent: TreeNode, children: IData[], type?: InsertChildType, reset?: boolean) => void
 setRawChildren | set node children, use it if you have an enhanced children data | (parent: TreeNode, children: TreeNode[], type?: InsertChildType, reset?: boolean) => void
+setSelected | set selected property | (node: TreeNode, selected?: boolean) => void
 
 To call any method you should do the next:
 ```javascript
@@ -215,10 +216,10 @@ treeHandlers.trees[your-tree-id].handlers.setOpen(...)
 Method | Description | Typings
 ---|---|---
 getIds | get trees ids | () => string[]
-safeUpdate | add or update tree in the GSM | safeUpdate(id: string, tree: TreeView) => TreeHandlers
 remove | remove tree from the GSM | (id: string): TreeHandlers
-safeUpdateHandler | add or update tree handler | safeUpdateHandler(treeId: string, handlerName: string, handler: Handler): TreeHandlers
 removeHandler | remove handler from the tree | removeHandler(treeId: string, handlerName: string): TreeHandlers
+safeUpdate | add or update tree in the GSM | safeUpdate(id: string, tree: TreeView) => TreeHandlers
+safeUpdateHandler | add or update tree handler | safeUpdateHandler(treeId: string, handlerName: string, handler: Handler): TreeHandlers
 
 You can also use *treeHandlers* like call chain
 ```javascript
@@ -261,16 +262,17 @@ You can also fire any events like redux-actions in the getChildren function. In 
 
 ```typescript
 export const defaultProps = {
-  filter: () => true,
-  opened: [],
-  displayedName: (node: TreeNode) => node.data.name,
+  childrenKey: 'children',
+  classes: {} as ClassesType,
   depthGap: 20,
+  displayedName: (node: TreeNode) => node.data.name,
+  filter: () => true,
+  gapMode: 'margin' as const,
+  horizontalLineStyles: { stroke: 'black', strokeWidth: 1, strokeDasharray: '1 1' },
+  idKey: 'id',
+  opened: [],
   verticalLineOffset: 5,
   verticalLineStyles: { stroke: 'black', strokeWidth: 1, strokeDasharray: '1 1' },
-  horizontalLineStyles: { stroke: 'black', strokeWidth: 1, strokeDasharray: '1 1' },
-  gapMode: 'margin',
-  idKey: 'id',
-  childrenKey: 'children',
 }
 ```
 

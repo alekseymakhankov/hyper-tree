@@ -5,15 +5,6 @@
       position: relative;
       transition: all 0.2s ease;
       opacity: 1;
-      cursor: pointer;
-
-      &:hover {
-        background-color: rgb(184, 222, 245);
-      }
-
-      &.selected {
-        background-color: rgb(184, 222, 245);
-      }
     }
 
     .child {

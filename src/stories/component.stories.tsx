@@ -3,8 +3,8 @@ import { storiesOf } from '@storybook/react'
 import TreeView from '../index'
 import { useTreeState } from '../helpers/hooks'
 import { treeHandlers } from '../helpers/treeHandlers'
-
 import { smallData } from './data'
+import styles from './style.scss'
 
 storiesOf('TreeView', module)
   .add('Base', () => {
@@ -42,6 +42,10 @@ storiesOf('TreeView', module)
             strokeDasharray: '1 4',
           }}
           gapMode="padding"
+          classes={{
+            nodeWrapperClassName: styles.nodeWrapper,
+            selectedNodeWrapperClassName: styles.selectedNodeWrapper,
+          }}
         />
       </>
     )
