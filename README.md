@@ -143,6 +143,7 @@ getChildren | returns node children or empty array | () => TreeNode[]
 getData | returns raw node data | () => any
 getFirstChild | returns the first child | () => TreeNode `|` null
 getLastChild | returns the last child | () => TreeNode `|` null
+getPath | get node path | (array?: boolean) => string | string[]
 hasChildren | returns true if node has atleast one child | () => boolean
 isLoading | returns true if node is loading | () => boolean
 isOpened | returns true if node is opened | () => boolean
@@ -202,11 +203,11 @@ Every tree has a default set of methods to manipulate the data
 Method | Descriptipn | Typings
 ---|---|---
 rerender | rerender the tree component | (callback? () => void) => void
-setLoading | set loading property | (node: TreeNode, loading?: boolean) => void
-setOpen | set opened property | (node: TreeNode) => void
-setRawChildren | set node children, use it if you have a raw children data | (parent: TreeNode, children: IData[], type?: InsertChildType, reset?: boolean) => void
-setRawChildren | set node children, use it if you have an enhanced children data | (parent: TreeNode, children: TreeNode[], type?: InsertChildType, reset?: boolean) => void
-setSelected | set selected property | (node: TreeNode, selected?: boolean) => void
+setLoading | set loading property | (node: TreeNode \| string \| number, loading?: boolean) => void
+setOpen | set opened property | (node: TreeNode \| string \| number) => void
+setRawChildren | set node children, use it if you have a raw children data | (parent: TreeNode \| string \| number, children: IData[], type?: InsertChildType, reset?: boolean) => void
+setRawChildren | set node children, use it if you have an enhanced children data | (parent: TreeNode \| string \| number, children: TreeNode[], type?: InsertChildType, reset?: boolean) => void
+setSelected | set selected property | (node: TreeNode \| string \| number, selected?: boolean) => void
 
 To call any method you should do the next:
 ```javascript

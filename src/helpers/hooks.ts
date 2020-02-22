@@ -60,45 +60,89 @@ export const useTreeState = ({
     },
   ), [data, defaultOpened, filter, id, sort, idKey, childrenKey])
 
-  const setLoading = useCallback((node: TreeNode, loading?: boolean) => {
-    node.setLoading(loading)
-    forceUpdate()
-  }, [forceUpdate])
+  const setLoading = useCallback((node: TreeNode | string | number, loading?: boolean) => {
+    if (node instanceof TreeNode) {
+      node.setLoading(loading)
+      forceUpdate()
+    } else {
+      const foundNode = treeView.getNodeById(node)
+      if (foundNode) {
+        foundNode.setLoading(loading)
+        forceUpdate()
+      }
+    }
+  }, [forceUpdate, treeView])
 
-  const setSelected = useCallback((node: TreeNode, selected?: boolean) => {
+  const setSelected = useCallback((node: TreeNode | string | number, selected?: boolean) => {
     if (!multipleSelect && selected) {
       treeView.unselectAll()
     }
-    node.setSelected(selected)
-    forceUpdate()
+    if (node instanceof TreeNode) {
+      node.setSelected(selected)
+      forceUpdate()
+    } else {
+      const foundNode = treeView.getNodeById(node)
+      if (foundNode) {
+        foundNode.setSelected(selected)
+        forceUpdate()
+      }
+    }
   }, [forceUpdate, treeView, multipleSelect])
 
-  const setChildren = useCallback((parent: TreeNode, children: TreeNode[], type?: InsertChildType, reset?: boolean) => {
-    parent.setNodeChildren(children, type, reset)
-    treeView.enhanceNodes()
-    forceUpdate()
+  const setChildren = useCallback((
+    parent: TreeNode | string | number,
+    children: TreeNode[],
+    type?: InsertChildType,
+    reset?: boolean,
+  ) => {
+    if (parent instanceof TreeNode) {
+      parent.setNodeChildren(children, type, reset)
+      treeView.enhanceNodes()
+      forceUpdate()
+    } else {
+      const foundParent = treeView.getNodeById(parent)
+      if (foundParent) {
+        foundParent.setNodeChildren(children, type, reset)
+        treeView.enhanceNodes()
+        forceUpdate()
+      }
+    }
   }, [treeView, forceUpdate])
 
-  const setRawChildren = useCallback((parent: TreeNode, children: IData[], type?: InsertChildType, reset?: boolean) => {
+  const setRawChildren = useCallback((
+    parent: TreeNode | string | number,
+    children: IData[],
+    type?: InsertChildType,
+    reset?: boolean,
+  ) => {
     setChildren(parent, treeView.staticEnhance(children, parent), type, reset)
   }, [setChildren, treeView])
 
-  const setOpen = useCallback((node: TreeNode) => {
-    if (!node) {
+  const setOpen = useCallback((node: TreeNode | string | number) => {
+    let currentNode: TreeNode
+
+    if (node instanceof TreeNode) {
+      currentNode = node
+    } else {
+      currentNode = treeView.getNodeById(node)
+    }
+
+    if (!currentNode) {
       return
     }
-    if (node.data.getChildren && isFunction(node.data.getChildren) && !node.isOpened()) {
-      setLoading(node, true)
-      const result = node.data.getChildren({ node })
+
+    if (currentNode.data.getChildren && isFunction(currentNode.data.getChildren) && !currentNode.isOpened()) {
+      setLoading(currentNode, true)
+      const result = currentNode.data.getChildren({ node })
       if (result.then) {
         result.then((asyncData: IData[]) => {
           setLoading(node, false)
-          node.setOpened(true)
+          currentNode.setOpened(true)
           setRawChildren(node, asyncData, 'last', true)
         })
       }
     } else {
-      node.setOpened(!node.isOpened())
+      currentNode.setOpened(!currentNode.isOpened())
       treeView.enhanceNodes()
     }
     forceUpdate(() => {

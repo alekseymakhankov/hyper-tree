@@ -22,8 +22,12 @@ storiesOf('TreeView', module)
       { data: smallData, filter, sort, id: 'storyTree', defaultOpened: true, multipleSelect: false },
     )
     const handleClick = React.useCallback(() => {
-      treeHandlers.trees.storyTree.handlers.rerender()
+      const node = treeHandlers.trees.storyTree.instance.getNodeById(7)
+      if (node) {
+        treeHandlers.trees.storyTree.handlers.setLoading(node, !node.isLoading())
+      }
     }, [])
+
     return (
       <>
         <button type="button" onClick={handleClick}>click</button>

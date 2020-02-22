@@ -2,18 +2,19 @@ import { uuid } from './uuid'
 import {} from './typeCheckers'
 
 export interface IDataOptions {
-  opened: boolean;
-  selected: boolean;
-  root: boolean;
-  leaf: boolean;
-  hasChildren: boolean;
   async: boolean;
   childrenCount: number;
-  currentChilrenCount: number;
-  parent?: TreeNode;
-  loading: boolean;
-  idKey: string;
   childrenKey: string;
+  currentChilrenCount: number;
+  hasChildren: boolean;
+  idKey: string;
+  leaf: boolean;
+  loading: boolean;
+  opened: boolean;
+  parent?: TreeNode;
+  path: string;
+  root: boolean;
+  selected: boolean;
 }
 
 export interface IData {
@@ -128,6 +129,17 @@ export class TreeNode implements ITreeNode {
   isSelected() {
     return this.options.selected
   }
+
+  setPath(parentPath: string) {
+    this.options.path = `${parentPath}/${this.id}`
+  }
+
+  getPath(array?: boolean): string | string[] {
+    if (array) {
+      return this.options.path.split('/').filter((id: string) => !!id)
+    }
+    return this.options.path
+  }
 }
 
 export class TreeView {
@@ -162,8 +174,14 @@ export class TreeView {
     return tree
   }
 
-  staticEnhance(data: any[], node?: TreeNode): TreeNode[] {
-    return this._staticEnhance(data, node)
+  staticEnhance(data: any[], node?: TreeNode | string | number): TreeNode[] {
+    let currentNode
+    if (node instanceof TreeNode) {
+      currentNode = node
+    } else if (node) {
+      currentNode = this.getNodeById(node)
+    }
+    return this._staticEnhance(data, currentNode)
   }
 
   enhance(data?: any[]): TreeNode[] {
@@ -218,8 +236,8 @@ export class TreeView {
     }
   }
 
-  getNodeById(id: number | string) {
-    return this._getNodeById(id, this.enhancedData)
+  getNodeById(id: number | string): TreeNode {
+    return this._getNodeById(id, this.enhancedData) as TreeNode
   }
 
   private _addChildren(data: any[], parentId: number | string, node: IData[], insertType: InsertChildType) {
@@ -292,8 +310,11 @@ export class TreeView {
           loading: false,
           idKey: this.options.idKey,
           childrenKey: this.options.childrenKey,
+          path: '',
         },
       )
+
+      newChild.setPath(parentNode ? parentNode.options.path : '')
 
       let children: TreeNode[] = []
       if (filteredChildren.length !== 0) {
@@ -326,8 +347,11 @@ export class TreeView {
           loading: false,
           idKey: this.options.idKey,
           childrenKey: this.options.childrenKey,
+          path: '',
         },
       )
+
+      newChild.setPath(parentNode ? parentNode.options.path : '')
 
       let children: TreeNode[] = []
       if (curentChildren.length !== 0) {
@@ -391,7 +415,10 @@ export class TreeView {
         return tree[i]
       }
       if (tree[i][this.options.childrenKey] && tree[i][this.options.childrenKey].length !== 0) {
-        return this._getNodeById(id, tree[i][this.options.childrenKey])
+        const node = this._getNodeById(id, tree[i][this.options.childrenKey])
+        if (node) {
+          return node
+        }
       }
     }
     return null
