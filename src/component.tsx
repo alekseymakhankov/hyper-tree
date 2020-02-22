@@ -10,15 +10,17 @@ const HyperTreeNode: React.RefForwardingComponent<HTMLDivElement, HyperTreeNodeP
   classes = defaultProps.classes,
   depth,
   depthGap = defaultProps.depthGap,
+  disableHorizontalLines,
+  disableLines,
   displayedName = defaultProps.displayedName,
   gapMode = defaultProps.gapMode,
   horizontalLineStyles,
   node,
+  renderNode,
   setOpen,
   setSelected,
   staticNodeHeight,
   verticalLineOffset = defaultProps.verticalLineOffset,
-  renderNode,
 }, ref) => {
   const handleClick = React.useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
@@ -70,7 +72,7 @@ const HyperTreeNode: React.RefForwardingComponent<HTMLDivElement, HyperTreeNodeP
             onToggle={handleClick}
           />
         )}
-      {!node.options.root && (
+      {!node.options.root && !(disableLines || disableHorizontalLines) && (
         <HorizontalLine
           depth={depth}
           depthGap={depthGap}
@@ -87,6 +89,8 @@ const HyperTreeViewChildren: React.FC<HyperTreeNodeProps> = ({
   classes = defaultProps.classes,
   depth,
   depthGap = defaultProps.depthGap,
+  disableLines,
+  disableVerticalLines,
   node,
   nodeHeight,
   verticalLineOffset,
@@ -112,19 +116,23 @@ const HyperTreeViewChildren: React.FC<HyperTreeNodeProps> = ({
         data={node.getChildren()}
         depth={depth + 1}
         depthGap={depthGap}
+        disableLines={disableLines}
+        disableVerticalLines={disableVerticalLines}
         nodeHeight={nodeHeight}
         verticalLineOffset={verticalLineOffset}
         verticalLineStyles={verticalLineStyles}
         {...props}
       />
-      <VerticalLine
-        count={node.options.currentChilrenCount}
-        depth={depth}
-        depthGap={depthGap}
-        nodeHeight={nodeHeight}
-        verticalLineOffset={verticalLineOffset}
-        verticalLineStyles={verticalLineStyles}
-      />
+      {!(disableLines || disableVerticalLines) && (
+        <VerticalLine
+          count={node.options.currentChilrenCount}
+          depth={depth}
+          depthGap={depthGap}
+          nodeHeight={nodeHeight}
+          verticalLineOffset={verticalLineOffset}
+          verticalLineStyles={verticalLineStyles}
+        />
+      )}
     </div>
   )
 }

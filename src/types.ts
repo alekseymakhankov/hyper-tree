@@ -1,35 +1,41 @@
 import { TreeNode } from './helpers/node'
 
 export type ClassesType = {
-  treeWrapperClassName?: string;
-  nodeWrapperClassName?: string;
-  selectedNodeWrapperClassName?: string;
-  levelClassName?: string;
-  parentChildrenClassName?: string;
   childrenClassName?: string;
   collapsedChildrenClassName?: string;
+  levelClassName?: string;
+  nodeWrapperClassName?: string;
+  parentChildrenClassName?: string;
+  selectedNodeWrapperClassName?: string;
+  treeWrapperClassName?: string;
 }
 
 export interface HyperTreeViewMainProps {
-  setOpen?: (node: any) => void;
-  setSelected?: (node: any, selected?: boolean) => void;
-  displayedName?: string | ((node: any) => string);
-  staticNodeHeight?: number;
+  classes?: ClassesType;
   data: TreeNode[];
   depth?: number;
   depthGap?: number;
+  disableHorizontalLines?: boolean;
+  disableLines?: boolean;
+  disableVerticalLines?: boolean;
+  displayedName?: string | ((node: any) => string);
+  gapMode?: 'margin' | 'padding';
+  horizontalLineStyles?: React.CSSProperties;
   renderNode?: (props: DefaultNodeProps) => React.ReactNode;
+  setOpen?: (node: any) => void;
+  setSelected?: (node: any, selected?: boolean) => void;
+  staticNodeHeight?: number;
   verticalLineOffset?: number;
   verticalLineStyles?: React.CSSProperties;
-  horizontalLineStyles?: React.CSSProperties;
-  gapMode?: 'margin' | 'padding';
-  classes?: ClassesType;
 }
 
 export interface HyperTreeViewCommonProps {
   classes?: ClassesType;
   depth: number;
   depthGap?: number;
+  disableHorizontalLines?: boolean;
+  disableLines?: boolean;
+  disableVerticalLines?: boolean;
   displayedName?: string | ((node: any) => string);
   gapMode?: 'margin' | 'padding';
   horizontalLineStyles?: React.CSSProperties;
@@ -52,12 +58,12 @@ export interface HyperTreeNodeProps extends HyperTreeViewCommonProps {
 }
 
 export type DefaultNodeProps = {
-  offsetProp?: string;
-  displayedName?: string | ((node: any) => string);
-  node: TreeNode;
-  onSelect: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void);
-  onToggle: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-  nodeRef?: React.Ref<HTMLDivElement>;
   depth?: number;
   depthGap?: number;
+  displayedName?: string | ((node: any) => string);
+  node: TreeNode;
+  nodeRef?: React.Ref<HTMLDivElement>;
+  offsetProp?: string;
+  onSelect: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void);
+  onToggle: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }

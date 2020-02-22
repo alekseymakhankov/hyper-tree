@@ -95,6 +95,9 @@ Props | Description
 classes?| object with elements class names
 data | nodes data, provided by *required* prop
 depthGap? | children indentation related to parent
+disableHorizontalLines? | disable horizontal lines
+disableLines? | disable all lines
+disableVerticalLines? | disable vertical lines
 displayedName? | format node content, if you use default node renderer
 gapMode? | indentation mode
 horizontalLineStyles? | horizontal line styles, [SVG](https://www.w3schools.com/html/html5_svg.asp) properties
