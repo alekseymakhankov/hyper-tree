@@ -120,6 +120,7 @@ setSelected? | select node, provided by *handlers* prop
 staticNodeHeight? | set static height of node, otherwise dynamic height will be used
 verticalLineOffset? | vertical line offset related to parent
 verticalLineStyles? | vertical line styles, [SVG](https://www.w3schools.com/html/html5_svg.asp) properties
+verticalLineTopOffset? | vertical line top offset
 
 ## <a id="use-tree-state"></a>useTreeState API
 
@@ -292,6 +293,7 @@ export const defaultProps = {
   opened: [],
   verticalLineOffset: 5,
   verticalLineStyles: { stroke: 'black', strokeWidth: 1, strokeDasharray: '1 1' },
+  verticalLineTopOffset: 0,
 }
 ```
 
