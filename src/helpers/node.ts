@@ -1,5 +1,4 @@
 import { uuid } from './uuid'
-import {} from './typeCheckers'
 
 export interface IDataOptions {
   async: boolean;
@@ -15,6 +14,7 @@ export interface IDataOptions {
   path: string;
   root: boolean;
   selected: boolean;
+  dropContainer: string | boolean;
 }
 
 export interface IData {
@@ -71,27 +71,46 @@ export class TreeNode implements ITreeNode {
 
   setNodeChildren(children: TreeNode[], type?: InsertChildType, reset?: boolean): TreeNode[] {
     if (!this.hasChildren() || reset) {
-      this.children = children
-      return this.children
+      this.setChildren(this.setNodesParent(children, this))
+      return this.getChildren()
     }
     if (type === 'first') {
-      this.children = [...children, ...(this.children || [])]
-      return this.children
+      this.setChildren(
+        this.setNodesParent([...children, ...(this.children || [])], this),
+      )
+      return this.getChildren()
     }
-    this.children = [...(this.children || []), ...children]
-    return this.children
+    this.setChildren(
+      this.setNodesParent([...(this.children || []), ...children], this),
+    )
+    return this.getChildren()
+  }
+
+  removeChild(node: TreeNode) {
+    this.setChildren(this.getChildren().filter((child: TreeNode) => child.id !== node.id))
   }
 
   setChildren(children: TreeNode[]) {
-    this.children = children
+    this.children = this.setNodesParent(children, this)
   }
 
   hasChildren() {
     return this.children && this.children.length !== 0
   }
 
+  getParent(): TreeNode | undefined {
+    return this.options.parent
+  }
+
   setParent(parent?: TreeNode) {
     this.options.parent = parent
+  }
+
+  setNodesParent(nodes: TreeNode[], parent?: TreeNode) {
+    return nodes.map((node: TreeNode) => {
+      node.setParent(parent)
+      return node
+    })
   }
 
   setChildrenCount(count: number) {
@@ -139,6 +158,14 @@ export class TreeNode implements ITreeNode {
       return this.options.path.split('/').filter((id: string) => !!id)
     }
     return this.options.path
+  }
+
+  setNodeDropContainer(dropContainer: string | boolean = false) {
+    this.options.dropContainer = dropContainer
+  }
+
+  getNodeDropContainer() {
+    return this.options.dropContainer
   }
 }
 
@@ -189,7 +216,10 @@ export class TreeView {
     return this.enhancedData
   }
 
-  enhanceNodes() {
+  enhanceNodes(shallow = false) {
+    if (shallow) {
+      this.enhancedData = this._staticShallowEnahance(this.enhancedData)
+    }
     this.traverse((node) => {
       this._calculateChildrenCount(node)
     }, false)
@@ -311,6 +341,7 @@ export class TreeView {
           idKey: this.options.idKey,
           childrenKey: this.options.childrenKey,
           path: '',
+          dropContainer: false,
         },
       )
 
@@ -348,6 +379,7 @@ export class TreeView {
           idKey: this.options.idKey,
           childrenKey: this.options.childrenKey,
           path: '',
+          dropContainer: false,
         },
       )
 
@@ -360,6 +392,24 @@ export class TreeView {
       newChild.setChildren(children)
       this._calculateChildrenCount(newChild)
       result.push(newChild)
+    })
+    return result
+  }
+
+  private _staticShallowEnahance(tree: TreeNode[], parentNode?: TreeNode): TreeNode[] {
+    const result: TreeNode[] = []
+    tree.forEach((child: TreeNode) => {
+      const curentChildren = child[this.options.childrenKey] || []
+      child.options.parent = parentNode
+      child.setPath(parentNode ? parentNode.options.path : '')
+
+      let children: TreeNode[] = []
+      if (curentChildren.length !== 0) {
+        children = this._staticShallowEnahance(curentChildren, child)
+      }
+      child.setChildren(children)
+      this._calculateChildrenCount(child)
+      result.push(child)
     })
     return result
   }

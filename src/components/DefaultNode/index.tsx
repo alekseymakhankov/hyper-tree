@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { isFunction } from '../../helpers/typeCheckers'
 import { defaultProps } from '../../helpers/defaultProps'
-import { Loader, Arrow } from '..'
+import { Arrow } from '../Arrow'
+import { Loader } from '../Loader'
 import { DefaultNodeProps } from '../../types'
 import styles from './style.scss'
 

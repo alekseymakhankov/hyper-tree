@@ -1,6 +1,8 @@
 .hyper-tree-view {
   .hyper-tree-node-wrapper {
     position: relative;
+    // background-color: rgb(255, 207, 207);
+    transition: all 0.2s ease;
     .hyper-node-wrapper {
       position: relative;
       transition: all 0.2s ease;
@@ -9,15 +11,22 @@
 
     .child {
       position: relative;
-      transition: all 0.2s cubic-bezier(0, 1, 0, 1);
+      transition: all 0.2s ease;
+      // transition: all 0.2s cubic-bezier(0, 1, 0, 1);
       transform-origin: top;
       transform-style: flat;
       max-height: 9999px;
       transform: scaleY(1);
+      opacity: 1;
+      visibility: visible;
 
       &.collapsed {
+        transition: all 0.2s cubic-bezier(0, 1, 0, 1);
         transform: scaleY(0);
         max-height: 0;
+        opacity: 0;
+        visibility: hidden;
+        overflow: hidden;
       }
     }
   }

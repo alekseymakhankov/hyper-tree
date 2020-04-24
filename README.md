@@ -9,6 +9,17 @@ I want to introduce you to an awesome react component for displaying tree data s
 ![min](https://img.shields.io/bundlephobia/min/react-hyper-tree)
 ![minzip](https://img.shields.io/bundlephobia/minzip/react-hyper-tree)
 
+## Features
+- render tree-like data structure
+- show/hide lines
+- fully custom component by providing render functions (node and drag zone) or custom class names
+- tree management by global utility (treeHandlers)
+- single/multiple node selection
+- async loading of children
+- drag and drop using 3 types of insertion (before, children, after)
+
+## Table of contents
+
 - [Installation](#installation)
 - [Usage](#usage)
 - [Properties](#properties)
@@ -99,8 +110,10 @@ disableHorizontalLines? | disable horizontal lines
 disableLines? | disable all lines
 disableVerticalLines? | disable vertical lines
 displayedName? | format node content, if you use default node renderer
+draggable?: | enable draggable mode
 gapMode? | indentation mode
 horizontalLineStyles? | horizontal line styles, [SVG](https://www.w3schools.com/html/html5_svg.asp) properties
+renderDragZone? | function to render your custom drag zone
 renderNode? | function to render your custom node
 setOpen? | open node children, provided by *handlers* prop
 setSelected? | select node, provided by *handlers* prop
@@ -155,6 +168,7 @@ setNodeChildren | insert node children | (children: TreeNode[], type?: InsertChi
 setOpened | set node opened | (opened?: boolean) => void
 setParent | set node parent | (parent?: TreeNode) => void
 setSelected | set node selected | (selected?: boolean) => void
+getPath | get node path | (array?: boolean): string | string[]
 
 ## <a id="global-state-manager"></a>Global state manager
 
@@ -206,8 +220,9 @@ rerender | rerender the tree component | (callback? () => void) => void
 setLoading | set loading property | (node: TreeNode \| string \| number, loading?: boolean) => void
 setOpen | set opened property | (node: TreeNode \| string \| number) => void
 setRawChildren | set node children, use it if you have a raw children data | (parent: TreeNode \| string \| number, children: IData[], type?: InsertChildType, reset?: boolean) => void
-setRawChildren | set node children, use it if you have an enhanced children data | (parent: TreeNode \| string \| number, children: TreeNode[], type?: InsertChildType, reset?: boolean) => void
+setChildren | set node children, use it if you have an enhanced children data | (parent: TreeNode \| string \| number, children: TreeNode[], type?: InsertChildType, reset?: boolean) => void
 setSelected | set selected property | (node: TreeNode \| string \| number, selected?: boolean) => void
+setSiblings | set node siblings | (node: TreeNode \| string \| number, siblings: TreeNode[], type: InsertSiblingType) => void
 
 To call any method you should do the next:
 ```javascript

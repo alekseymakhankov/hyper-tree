@@ -1,6 +1,9 @@
 import * as React from 'react'
 import { getDepthPx } from './helpers/getDepthPx'
-import { HorizontalLine, VerticalLine, DefaultNode } from './components'
+import { DefaultNode } from './components/DefaultNode'
+import { VerticalLine } from './components/VerticalLine'
+import { HorizontalLine } from './components/HorizontalLine'
+import { DragZone } from './components/DragZone'
 import { classnames } from './helpers/classnames'
 import { defaultProps } from './helpers/defaultProps'
 import { HyperTreeNodeProps, HyperTreeViewProps, HyperTreeViewMainProps } from './types'
@@ -13,9 +16,13 @@ const HyperTreeNode: React.RefForwardingComponent<HTMLDivElement, HyperTreeNodeP
   disableHorizontalLines,
   disableLines,
   displayedName = defaultProps.displayedName,
+  draggable,
+  draggableHandlers,
   gapMode = defaultProps.gapMode,
   horizontalLineStyles,
+  isDragging,
   node,
+  renderDragZone,
   renderNode,
   setOpen,
   setSelected,
@@ -42,17 +49,48 @@ const HyperTreeNode: React.RefForwardingComponent<HTMLDivElement, HyperTreeNodeP
 
   const offsetProp = gapMode === 'padding' ? 'paddingLeft' : 'marginLeft'
 
+  const handleDragEnter = React.useCallback(
+    (type: any) => draggableHandlers.handleDragEnter(node, type),
+    [draggableHandlers, node],
+  )
+
   return (
     <div
+      draggable={draggable}
+      onDragStart={draggable ? draggableHandlers.handleDragStart : undefined}
+      onDragEnd={draggable ? draggableHandlers.handleDrop(node, node.getNodeDropContainer()) : undefined}
       className={classnames({
         [styles.hyperNodeWrapper]: true,
         [styles.selected]: node.isSelected(),
-        [classes.nodeWrapperClassName || '']: !!classes.nodeWrapperClassName,
-        [classes.selectedNodeWrapperClassName || '']: !!(classes.selectedNodeWrapperClassName && node.isSelected()),
+        [styles.dropContainer]: !!node.getNodeDropContainer(),
+        [classes.nodeWrapper || '']: !!classes.nodeWrapper,
+        [classes.selectedNodeWrapper || '']: !!(classes.selectedNodeWrapper && node.isSelected()),
       })}
       style={{ [offsetProp]: getDepthPx(depth, depthGap), ...additionStyles }}
       ref={ref as React.Ref<HTMLDivElement>}
     >
+      {draggable && renderDragZone
+        ? renderDragZone({
+          depth,
+          depthGap,
+          isDragging,
+          node,
+          onDragEnterAfter: handleDragEnter('after'),
+          onDragEnterBefore: handleDragEnter('before'),
+          onDragEnterChildren: handleDragEnter('children'),
+          onDragLeave: draggableHandlers.handleDragLeave(node),
+        }) : draggable && (
+          <DragZone
+            depth={depth}
+            depthGap={depthGap}
+            isDragging={isDragging}
+            node={node}
+            onDragEnterAfter={handleDragEnter('after')}
+            onDragEnterBefore={handleDragEnter('before')}
+            onDragEnterChildren={handleDragEnter('children')}
+            onDragLeave={draggableHandlers.handleDragLeave(node)}
+          />
+        )}
       {renderNode
         ? renderNode({
           depth,
@@ -63,8 +101,7 @@ const HyperTreeNode: React.RefForwardingComponent<HTMLDivElement, HyperTreeNodeP
           offsetProp,
           onSelect: handleSelected,
           onToggle: handleClick,
-        })
-        : (
+        }) : (
           <DefaultNode
             displayedName={displayedName}
             node={node}
@@ -95,6 +132,7 @@ const HyperTreeViewChildren: React.FC<HyperTreeNodeProps> = ({
   nodeHeight,
   verticalLineOffset,
   verticalLineStyles,
+  verticalLineTopOffset,
   ...props
 }) => {
   if (!node.hasChildren()) {
@@ -106,8 +144,8 @@ const HyperTreeViewChildren: React.FC<HyperTreeNodeProps> = ({
         classnames({
           [styles.child]: true,
           [styles.collapsed]: !node.isOpened(),
-          [classes.childrenClassName || '']: !!classes.childrenClassName,
-          [classes.collapsedChildrenClassName || '']: !!(classes.collapsedChildrenClassName && !node.isOpened()),
+          [classes.children || '']: !!classes.children,
+          [classes.collapsedChildren || '']: !!(classes.collapsedChildren && !node.isOpened()),
         })
       }
     >
@@ -121,6 +159,7 @@ const HyperTreeViewChildren: React.FC<HyperTreeNodeProps> = ({
         nodeHeight={nodeHeight}
         verticalLineOffset={verticalLineOffset}
         verticalLineStyles={verticalLineStyles}
+        verticalLineTopOffset={verticalLineTopOffset}
         {...props}
       />
       {!(disableLines || disableVerticalLines) && (
@@ -131,6 +170,7 @@ const HyperTreeViewChildren: React.FC<HyperTreeNodeProps> = ({
           nodeHeight={nodeHeight}
           verticalLineOffset={verticalLineOffset}
           verticalLineStyles={verticalLineStyles}
+          verticalLineTopOffset={verticalLineTopOffset}
         />
       )}
     </div>
@@ -139,11 +179,11 @@ const HyperTreeViewChildren: React.FC<HyperTreeNodeProps> = ({
 
 const HyperTreeView: React.RefForwardingComponent<HTMLDivElement, HyperTreeViewProps> = React.forwardRef(
   ({ classes = defaultProps.classes, data, depth = 0, ...props }, ref) => (
-    <div className={classnames(styles.hyperTreeView, classes.levelClassName)}>
+    <div className={classnames(styles.hyperTreeView, classes.level)}>
       {data.map((currentNode: any) => (
         <div
           key={currentNode.id}
-          className={classnames(styles.hyperTreeNodeWrapper, classes.parentChildrenClassName)}
+          className={classnames(styles.hyperTreeNodeWrapper, classes.parentChildren)}
         >
           <HyperTreeNode classes={classes} depth={depth} node={currentNode} ref={ref} {...props} />
           <HyperTreeViewChildren classes={classes} depth={depth} node={currentNode} {...props} />
@@ -168,7 +208,7 @@ const Tree: React.FC<HyperTreeViewMainProps> = ({
   }, [height, staticNodeHeight])
 
   return (
-    <div className={classes.treeWrapperClassName}>
+    <div className={classes.treeWrapper}>
       <HyperTreeView
         classes={classes}
         depth={0}

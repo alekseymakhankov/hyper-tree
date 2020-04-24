@@ -13,4 +13,5 @@ export const defaultProps = {
   opened: [],
   verticalLineOffset: 5,
   verticalLineStyles: { stroke: 'black', strokeWidth: 1, strokeDasharray: '1 1' },
+  verticalLineTopOffset: 0,
 }

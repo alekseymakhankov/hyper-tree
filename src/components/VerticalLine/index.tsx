@@ -10,6 +10,7 @@ interface RenderVerticalLine {
   nodeHeight: number;
   verticalLineOffset?: number;
   verticalLineStyles?: React.CSSProperties;
+  verticalLineTopOffset?: number;
 }
 
 export const VerticalLine = ({
@@ -19,18 +20,24 @@ export const VerticalLine = ({
   nodeHeight,
   verticalLineOffset = defaultProps.verticalLineOffset,
   verticalLineStyles = defaultProps.verticalLineStyles,
+  verticalLineTopOffset = defaultProps.verticalLineTopOffset,
 }: RenderVerticalLine) => (
   <div
     className={styles.verticalLine}
-    style={{ marginLeft: getDepthPx(depth, depthGap), left: `${verticalLineOffset}px` }}
+    style={
+      {
+        left: `${verticalLineOffset}px`,
+        marginLeft: getDepthPx(depth, depthGap),
+        top: `${verticalLineTopOffset}px`
+      }}
   >
     <svg
       style={
         {
-          height: `${Math.floor(count * nodeHeight - (nodeHeight ? nodeHeight / 2 : 0))}px`,
+          height: `${Math.floor(count * nodeHeight - (nodeHeight ? nodeHeight / 2 : 0)) - verticalLineTopOffset}px`,
           width: `${verticalLineStyles.strokeWidth}px`,
           position: 'absolute',
-          transition: 'all 0.2s cubic-bezier(0, 1, 0, 1)',
+          transition: 'all 0.2s ease',
         }
       }
     >

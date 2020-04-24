@@ -1,5 +1,5 @@
 import { useMemo, useCallback, useState } from 'react'
-import { TreeView, IFilter, ISort, TreeNode, InsertChildType, IData } from './node'
+import { TreeView, IFilter, ISort, TreeNode, InsertChildType, InsertSiblingType, IData } from './node'
 import { treeHandlers } from './treeHandlers'
 import { isFunction } from './typeCheckers'
 import { defaultProps } from './defaultProps'
@@ -14,6 +14,8 @@ export interface IUseTreeState {
   idKey?: string;
   childrenKey?: string;
 }
+
+export type IDropType = 'before' | 'children' | 'after'
 
 const defaultOptions = {
   filter: () => true,
@@ -46,6 +48,9 @@ export const useTreeState = ({
   childrenKey = defaultProps.childrenKey,
 }: IUseTreeState) => {
   const forceUpdate = useForceUpdate()
+  const [dropNodeId, setDropNodeId] = useState<string | number | null>(null)
+  const [isDragging, setDragging] = useState(false)
+  const [dropType, setDropType] = useState<string | boolean>(false)
 
   const treeView = useMemo(() => new TreeView(
     id,
@@ -89,6 +94,19 @@ export const useTreeState = ({
     }
   }, [forceUpdate, treeView, multipleSelect])
 
+  const setDragContainer = useCallback((node: TreeNode | string | number, dragContainer?: string | boolean) => {
+    if (node instanceof TreeNode) {
+      node.setNodeDropContainer(dragContainer)
+      forceUpdate()
+    } else {
+      const foundNode = treeView.getNodeById(node)
+      if (foundNode) {
+        foundNode.setNodeDropContainer(dragContainer)
+        forceUpdate()
+      }
+    }
+  }, [forceUpdate, treeView])
+
   const setChildren = useCallback((
     parent: TreeNode | string | number,
     children: TreeNode[],
@@ -104,6 +122,46 @@ export const useTreeState = ({
       if (foundParent) {
         foundParent.setNodeChildren(children, type, reset)
         treeView.enhanceNodes()
+        forceUpdate()
+      }
+    }
+  }, [treeView, forceUpdate])
+
+  const setSiblings = useCallback((
+    node: TreeNode | string | number,
+    siblings: TreeNode[],
+    type: InsertSiblingType,
+  ) => {
+    let targetNode: TreeNode | null = null
+    if (node instanceof TreeNode) {
+      targetNode = node
+    } else {
+      targetNode = treeView.getNodeById(node)
+    }
+    if (targetNode && targetNode.options.parent) {
+      const parentChildren = [...targetNode.options.parent.getChildren()]
+      const nodeIndex = parentChildren.findIndex((child: TreeNode) => targetNode && child.id === targetNode.id)
+      if (nodeIndex !== -1) {
+        const startIndex = type === 'before' ? nodeIndex : nodeIndex + 1
+        parentChildren.splice(startIndex, 0, ...siblings)
+        targetNode.options.parent.setNodeChildren(parentChildren, 'first', true)
+        treeView.enhanceNodes(true)
+        forceUpdate()
+      }
+    }
+    if (targetNode && targetNode.options.root) {
+      const nodeIndex = treeView.enhancedData.findIndex((child: TreeNode) => targetNode && targetNode.id === child.id)
+      if (nodeIndex !== -1) {
+        const startIndex = type === 'before' ? nodeIndex : nodeIndex + 1
+        const mappedSiblings = siblings.map((sibling: TreeNode) => {
+          sibling.options.parent = undefined
+          sibling.options.root = true
+          sibling.options.leaf = false
+          return sibling
+        })
+
+        treeView.enhancedData.splice(startIndex, 0, ...mappedSiblings)
+        treeView.enhanceNodes(true)
         forceUpdate()
       }
     }
@@ -151,6 +209,58 @@ export const useTreeState = ({
   }, [forceUpdate, treeView, setLoading, setRawChildren])
 
 
+  const handleDragStart = useCallback((e: React.DragEvent) => {
+    e.stopPropagation()
+    setDragging(true)
+  }, [])
+
+  const handleDragEnter = useCallback((node: TreeNode, type: string | boolean) => (e: React.DragEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
+    setDragContainer(node, type)
+    setDropNodeId(node.id)
+    setDropType(type)
+  }, [setDragContainer])
+
+  const handleDragLeave = useCallback((node: TreeNode) => (e: React.DragEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
+    if (node.id !== dropNodeId) {
+      setDragContainer(node, false)
+    }
+  }, [setDragContainer, dropNodeId])
+
+  const handleDrop = useCallback((sourceNode: TreeNode) => (e: React.DragEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
+    setDragging(false)
+    if (dropNodeId) {
+      setDragContainer(dropNodeId, false)
+    }
+    if (dropNodeId && dropNodeId !== sourceNode.id) {
+      const targetNode = treeView.getNodeById(dropNodeId)
+      if (sourceNode) {
+        if (sourceNode.options.parent) {
+          sourceNode.options.parent.removeChild(sourceNode)
+        } else {
+          treeView.enhancedData = treeView.enhancedData.filter((child: TreeNode) => child.id !== sourceNode.id)
+        }
+        if (dropType === 'children') {
+          sourceNode.options.parent = targetNode
+          sourceNode.options.root = false
+          sourceNode.options.leaf = true
+          targetNode.setNodeChildren([sourceNode], 'last')
+          treeView.enhanceNodes(true)
+          forceUpdate()
+        } else if (dropType === 'after' || dropType === 'before') {
+          setSiblings(targetNode, [sourceNode], dropType)
+        }
+        setDropNodeId(null)
+      }
+    }
+  }, [dropNodeId, forceUpdate, treeView, setDragContainer, setSiblings, dropType])
+
+
   treeHandlers
     .safeUpdate(id, treeView)
     .safeUpdateHandler(id, 'rerender', forceUpdate)
@@ -159,19 +269,39 @@ export const useTreeState = ({
     .safeUpdateHandler(id, 'setSelected', setSelected)
     .safeUpdateHandler(id, 'setRawChildren', setRawChildren)
     .safeUpdateHandler(id, 'setChildren', setChildren)
+    .safeUpdateHandler(id, 'setSiblings', setSiblings)
 
   const handlers = useMemo(() => ({
-    setOpen,
-    setLoading,
-    setSelected,
     setChildren,
+    setLoading,
+    setOpen,
     setRawChildren,
-  }), [setOpen, setLoading, setSelected, setChildren, setRawChildren])
+    setSelected,
+    setSiblings,
+    draggableHandlers: {
+      handleDragStart,
+      handleDragEnter,
+      handleDragLeave,
+      handleDrop,
+    },
+  }), [
+    handleDragEnter,
+    handleDragLeave,
+    handleDragStart,
+    handleDrop,
+    setChildren,
+    setLoading,
+    setOpen,
+    setRawChildren,
+    setSelected,
+    setSiblings,
+  ])
 
   return {
     instance: treeView,
     handlers,
     required: {
+      isDragging,
       data: treeView.enhancedData,
     },
   }

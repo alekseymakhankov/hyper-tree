@@ -22,10 +22,7 @@ storiesOf('TreeView', module)
       { data: smallData, filter, sort, id: 'storyTree', defaultOpened: true, multipleSelect: false },
     )
     const handleClick = React.useCallback(() => {
-      const node = treeHandlers.trees.storyTree.instance.getNodeById(7)
-      if (node) {
-        treeHandlers.trees.storyTree.handlers.setLoading(node, !node.isLoading())
-      }
+      treeHandlers.trees.storyTree.handlers.rerender()
     }, [])
 
     return (
@@ -35,6 +32,8 @@ storiesOf('TreeView', module)
           {...required}
           {...handlers}
           depthGap={20}
+          staticNodeHeight={30}
+          verticalLineTopOffset={-10}
           horizontalLineStyles={{
             stroke: 'black',
             strokeWidth: 1,
@@ -47,8 +46,8 @@ storiesOf('TreeView', module)
           }}
           gapMode="padding"
           classes={{
-            nodeWrapperClassName: styles.nodeWrapper,
-            selectedNodeWrapperClassName: styles.selectedNodeWrapper,
+            nodeWrapper: styles.nodeWrapper,
+            selectedNodeWrapper: styles.selectedNodeWrapper,
           }}
         />
       </>

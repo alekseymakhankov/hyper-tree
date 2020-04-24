@@ -10,5 +10,10 @@ export {
   treeHandlers,
 }
 
-export * from './components'
+export * from './components/Arrow'
+export * from './components/DefaultNode'
+export * from './components/DragZone'
+export * from './components/HorizontalLine'
+export * from './components/Loader'
+export * from './components/VerticalLine'
 export * from './types'
