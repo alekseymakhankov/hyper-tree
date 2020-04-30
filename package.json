@@ -1,7 +1,7 @@
 {
   "name": "react-hyper-tree",
-  "version": "0.2.0",
-  "description": "Fully customizable and accessible tree react component",
+  "version": "0.2.1",
+  "description": "Fully customizable react tree component",
   "author": "Aleksey Makhankov",
   "license": "MIT",
   "repository": "https://github.com/alekseymakhankov/hyper-tree.git",
@@ -77,6 +77,8 @@
     "rollup-plugin-peer-deps-external": "^2.2.0",
     "rollup-plugin-postcss": "^2.0.6",
     "rollup-plugin-progress": "^1.0.0",
+    "rollup-plugin-size-snapshot": "^0.11.0",
+    "rollup-plugin-terser": "^5.3.0",
     "rollup-plugin-typescript2": "^0.25.3",
     "sass-loader": "^8.0.2",
     "storybook-addon-perf": "^1.0.4",

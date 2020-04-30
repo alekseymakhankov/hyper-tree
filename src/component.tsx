@@ -9,7 +9,7 @@ import { defaultProps } from './helpers/defaultProps'
 import { HyperTreeNodeProps, HyperTreeViewProps, HyperTreeViewMainProps } from './types'
 import styles from './style.scss'
 
-const HyperTreeNode: React.RefForwardingComponent<HTMLDivElement, HyperTreeNodeProps> = React.forwardRef(({
+const HyperTreeNode = React.forwardRef<HTMLDivElement, HyperTreeNodeProps>(({
   classes = defaultProps.classes,
   depth,
   depthGap = defaultProps.depthGap,
@@ -177,7 +177,7 @@ const HyperTreeViewChildren: React.FC<HyperTreeNodeProps> = ({
   )
 }
 
-const HyperTreeView: React.RefForwardingComponent<HTMLDivElement, HyperTreeViewProps> = React.forwardRef(
+const HyperTreeView = React.forwardRef<HTMLDivElement, HyperTreeViewProps>(
   ({ classes = defaultProps.classes, data, depth = 0, ...props }, ref) => (
     <div className={classnames(styles.hyperTreeView, classes.level)}>
       {data.map((currentNode: any) => (
