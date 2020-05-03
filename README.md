@@ -33,7 +33,7 @@ I want to introduce you to an awesome react component for displaying tree data s
 - [Contributing](#contributing)
 - [License](#license)
 
-## Live demo (under development)
+## [Live demo is available!](https://alekseymakhankov.github.io/packages/?package=hyper-modal)
 
 ### Check also [react-hyper-modal](https://www.npmjs.com/package/react-hyper-modal) library
 
