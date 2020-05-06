@@ -28,8 +28,9 @@ export const VerticalLine = ({
       {
         left: `${verticalLineOffset}px`,
         marginLeft: getDepthPx(depth, depthGap),
-        top: `${verticalLineTopOffset}px`
-      }}
+        top: `${verticalLineTopOffset}px`,
+      }
+    }
   >
     <svg
       style={
