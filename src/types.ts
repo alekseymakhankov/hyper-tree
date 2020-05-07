@@ -33,36 +33,18 @@ export interface HyperTreeViewMainProps {
   verticalLineTopOffset?: number;
 }
 
-export interface HyperTreeViewPrivateProps {
-  classes?: ClassesType;
+export interface HyperTreeViewPrivateProps extends HyperTreeViewMainProps {
   depth: number;
-  depthGap?: number;
-  disableHorizontalLines?: boolean;
-  disableLines?: boolean;
-  disableVerticalLines?: boolean;
-  displayedName?: string | ((node: any) => string);
-  draggable?: boolean;
-  draggableHandlers: any;
-  gapMode?: 'margin' | 'padding';
-  horizontalLineStyles?: React.CSSProperties;
   isDragging?: boolean;
   nodeHeight: number;
   ref?: React.Ref<HTMLDivElement>;
-  renderDragZone?: (props: DragZoneProps) => React.ReactNode | string | null;
-  renderNode?: (props: DefaultNodeProps) => React.ReactNode | string | null;
-  setOpen?: (node: any) => void;
-  setSelected?: (node: any, selected?: boolean) => void;
-  staticNodeHeight?: number;
-  verticalLineOffset?: number;
-  verticalLineStyles?: React.CSSProperties;
-  verticalLineTopOffset?: number;
 }
 
 export interface HyperTreeViewProps extends HyperTreeViewPrivateProps {
   data: TreeNode[];
 }
 
-export interface HyperTreeNodeProps extends HyperTreeViewPrivateProps {
+export interface HyperTreeNodeProps extends Omit<HyperTreeViewPrivateProps, 'data'> {
   node: TreeNode;
 }
 
