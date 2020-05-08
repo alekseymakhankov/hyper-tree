@@ -1,1 +1,1 @@
-export const getDepthPx = (depth: number, depthGap: number) => `${depth * depthGap}px`
+export const getDepthPx = (depth: number, depthGap: number): string => `${depth * depthGap}px`

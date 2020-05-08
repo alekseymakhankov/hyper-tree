@@ -6,7 +6,7 @@ export const convertObjectToString = (classes: { [key: string]: boolean }): stri
   .keys(classes)
   .filter((key) => !!classes[key])
   .reduce(
-    (classString, item) => (classString
+    (classString: string, item: string) => (classString
       ? `${classString}${item ? ` ${item}` : ''}`
       : `${item}`),
     '',
@@ -14,7 +14,7 @@ export const convertObjectToString = (classes: { [key: string]: boolean }): stri
 
 export const classnames = (
   ...classes: (IClassNamesObjectProps | IClassNamesProps)[]
-) => {
+): string => {
   if (classes[0] && typeof classes[0] === 'string') {
     return classes.join(' ')
   }

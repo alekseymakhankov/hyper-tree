@@ -1,5 +1,5 @@
 import Tree from './component'
-import { useTreeState } from './helpers/hooks'
+import { useTreeState, IDropType, IUseTreeState } from './helpers/hooks'
 import { treeHandlers } from './helpers/treeHandlers'
 
 export default Tree
@@ -8,6 +8,8 @@ export {
   Tree,
   useTreeState,
   treeHandlers,
+  IUseTreeState,
+  IDropType,
 }
 
 export * from './components/Arrow'

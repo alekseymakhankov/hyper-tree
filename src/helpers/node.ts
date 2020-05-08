@@ -1,5 +1,3 @@
-import { uuid } from './uuid'
-
 export interface IDataOptions {
   async: boolean;
   childrenCount: number;
@@ -52,7 +50,7 @@ export class TreeNode implements ITreeNode {
 
   constructor(data: IData, options: IDataOptions, children?: TreeNode[]) {
     this.data = data
-    this.id = data[options.idKey] || uuid()
+    this.id = data[options.idKey]
     this.options = options
     this.children = children
   }
@@ -185,7 +183,6 @@ export class TreeView {
     this.data = data
     this.options = options
     this.enhancedData = []
-    this.hash = uuid()
     this.ids = []
     if (options.enhance) {
       this.enhance()

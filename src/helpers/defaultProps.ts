@@ -1,5 +1,5 @@
-import { TreeNode } from './node'
 import { ClassesType } from '../types'
+import { TreeNode } from './node'
 
 export const defaultProps = {
   childrenKey: 'children',
