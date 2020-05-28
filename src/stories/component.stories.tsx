@@ -3,8 +3,7 @@ import { storiesOf } from '@storybook/react'
 import TreeView from '../index'
 import { useTreeState } from '../helpers/hooks'
 import { treeHandlers } from '../helpers/treeHandlers'
-// import { smallData } from './data'
-import data from './tree.json'
+import { smallData } from './data'
 import styles from './style.scss'
 
 storiesOf('TreeView', module)
@@ -29,10 +28,10 @@ storiesOf('TreeView', module)
       return 0
     }, [])
     const { required, handlers } = useTreeState(
-      { data, filter: value ? filter : undefined, sort, id: 'storyTree', defaultOpened: true, multipleSelect: false },
+      { data: smallData, filter: value ? filter : undefined, sort, id: 'storyTree', defaultOpened: false, multipleSelect: false },
     )
     const handleClick = React.useCallback(() => {
-      treeHandlers.trees.storyTree.handlers.rerender()
+      treeHandlers.trees.storyTree.handlers.setSelectedByPath('/1/63/191/2611')
     }, [])
 
     return (

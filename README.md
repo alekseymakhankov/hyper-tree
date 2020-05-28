@@ -222,9 +222,11 @@ Method | Descriptipn | Typings
 rerender | rerender the tree component | (callback? () => void) => void
 setLoading | set loading property | (node: TreeNode \| string \| number, loading?: boolean) => void
 setOpen | set opened property | (node: TreeNode \| string \| number) => void
+setOpenByPath | set opened by path | (path: string) => void
 setRawChildren | set node children, use it if you have a raw children data | (parent: TreeNode \| string \| number, children: IData[], type?: InsertChildType, reset?: boolean) => void
 setChildren | set node children, use it if you have an enhanced children data | (parent: TreeNode \| string \| number, children: TreeNode[], type?: InsertChildType, reset?: boolean) => void
 setSelected | set selected property | (node: TreeNode \| string \| number, selected?: boolean) => void
+setSelectedByPath | set selected by path | (path: string, all: boolean) => void
 setSiblings | set node siblings | (node: TreeNode \| string \| number, siblings: TreeNode[], type: InsertSiblingType) => void
 
 To call any method you should do the next:

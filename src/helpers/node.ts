@@ -493,7 +493,7 @@ export class TreeView {
 
   private _getNodeById(id: string | number, tree: any[]): any {
     for (let i = 0; i < tree.length; i += 1) {
-      if (tree[i][this.options.idKey] === id) {
+      if (`${tree[i][this.options.idKey]}`.toLowerCase() === `${id}`.toLowerCase()) {
         return tree[i]
       }
       if (tree[i][this.options.childrenKey] && tree[i][this.options.childrenKey].length !== 0) {

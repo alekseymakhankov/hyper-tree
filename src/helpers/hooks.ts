@@ -93,6 +93,18 @@ export const useTreeState = ({
     }
   }, [forceUpdate, treeView, multipleSelect])
 
+  const setSelectedByPath = useCallback((path: string, all = false) => {
+    if (all) {
+      path.split('/').forEach(currentPath => currentPath && setSelected(currentPath, true))
+    } else {
+      const [lastId] = path.split('/').reverse()
+      if (lastId) {
+        setSelected(lastId, true)
+      }
+    }
+    setOpenByPath(path)
+  }, [])
+
   const setDragContainer = useCallback((node: TreeNode | string | number, dragContainer?: string | boolean) => {
     if (node instanceof TreeNode) {
       node.setNodeDropContainer(dragContainer)
@@ -207,6 +219,9 @@ export const useTreeState = ({
     })
   }, [forceUpdate, treeView, setLoading, setRawChildren])
 
+  const setOpenByPath = useCallback((path: string) => {
+    path.split('/').forEach(currentPath => currentPath && setOpen(currentPath))
+  }, [])
 
   const handleDragStart = useCallback((e: React.DragEvent) => {
     e.stopPropagation()
@@ -264,8 +279,10 @@ export const useTreeState = ({
     .safeUpdate(id, treeView)
     .safeUpdateHandler(id, 'rerender', forceUpdate)
     .safeUpdateHandler(id, 'setOpen', setOpen)
+    .safeUpdateHandler(id, 'setOpenByPath', setOpenByPath)
     .safeUpdateHandler(id, 'setLoading', setLoading)
     .safeUpdateHandler(id, 'setSelected', setSelected)
+    .safeUpdateHandler(id, 'setSelectedByPath', setSelectedByPath)
     .safeUpdateHandler(id, 'setRawChildren', setRawChildren)
     .safeUpdateHandler(id, 'setChildren', setChildren)
     .safeUpdateHandler(id, 'setSiblings', setSiblings)
