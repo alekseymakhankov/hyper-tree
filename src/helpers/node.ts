@@ -13,6 +13,7 @@ export interface IDataOptions {
   root: boolean;
   selected: boolean;
   dropContainer: string | boolean;
+  reactKey: string;
 }
 
 export interface IData {
@@ -30,7 +31,7 @@ export type IFilter = (node: TreeNode) => boolean;
 export type ISort = (node: TreeNode, siblingNode: TreeNode) => -1 | 0 | 1
 
 export interface Options {
-  filter: IFilter;
+  filter?: IFilter;
   sort: ISort;
   defaultOpened?: boolean | number[];
   enhance?: boolean;
@@ -164,6 +165,10 @@ export class TreeNode implements ITreeNode {
 
   getNodeDropContainer() {
     return this.options.dropContainer
+  }
+
+  getReactKey() {
+    return this.options.reactKey
   }
 }
 
@@ -317,10 +322,10 @@ export class TreeView {
 
   private _enhance(tree: any[], options: Options, parentNode?: TreeNode): TreeNode[] {
     const result: TreeNode[] = []
-    this.sort(tree).filter(this.options.filter).forEach((child: IData) => {
+    this.sort(tree).forEach((child: IData, index: number) => {
       const filteredChildren: TreeNode[] = child[this.options.childrenKey]
         && child[this.options.childrenKey].length !== 0
-        ? child[this.options.childrenKey].filter(this.options.filter)
+        ? child[this.options.childrenKey]
         : []
       const newChild: TreeNode = new TreeNode(
         child,
@@ -339,18 +344,46 @@ export class TreeView {
           childrenKey: this.options.childrenKey,
           path: '',
           dropContainer: false,
+          reactKey: ''
         },
       )
 
       newChild.setPath(parentNode ? parentNode.options.path : '')
+      newChild.options.reactKey = `${newChild[this.options.idKey]}-${newChild.getPath()}-${index}`
 
       let children: TreeNode[] = []
       if (filteredChildren.length !== 0) {
         children = this._enhance(this.sort(filteredChildren), options, newChild)
+
+        if (options.filter) {
+          if (children.length !== 0) {
+            children = children.filter(child => {
+              if (child.getChildren().some(c => c.isOpened())) {
+                return true
+              }
+              return options.filter && options.filter(child)
+            })
+            if (children.length !== 0) {
+              for (let i = 0; i < children.length; i += 1) {
+                children[i].setOpened(true)
+                if (children[i].options.parent) {
+                  children[i].options.parent?.setOpened(true)
+                }
+              }
+            }
+          }
+        }
       }
+
+      if (newChild.options.leaf) {
+        newChild.setOpened(true)
+      }
+
       newChild.setChildren(children)
       this._calculateChildrenCount(newChild)
-      result.push(newChild)
+      if (!(options.filter && newChild.options.leaf && !(options.filter && options.filter(newChild)))) {
+        result.push(newChild)
+      }
     })
 
     return result
@@ -358,7 +391,7 @@ export class TreeView {
 
   private _staticEnhance(tree: any[], parentNode?: TreeNode): TreeNode[] {
     const result: TreeNode[] = []
-    tree.forEach((child: IData) => {
+    tree.forEach((child: IData, index: number) => {
       const curentChildren = child[this.options.childrenKey] || []
       const newChild: TreeNode = new TreeNode(
         child,
@@ -377,10 +410,12 @@ export class TreeView {
           childrenKey: this.options.childrenKey,
           path: '',
           dropContainer: false,
+          reactKey: '',
         },
       )
 
       newChild.setPath(parentNode ? parentNode.options.path : '')
+      newChild.options.reactKey = `${newChild[this.options.idKey]}-${newChild.getPath()}-${index}`
 
       let children: TreeNode[] = []
       if (curentChildren.length !== 0) {

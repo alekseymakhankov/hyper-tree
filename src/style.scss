@@ -1,10 +1,8 @@
 .hyperTreeView {
   .hyperTreeNodeWrapper {
     position: relative;
-    transition: all 0.2s ease;
     .hyperNodeWrapper {
       position: relative;
-      transition: all 0.2s ease;
       opacity: 1;
     }
 
@@ -13,7 +11,7 @@
       transition: all 0.2s ease;
       transform-origin: top;
       transform-style: flat;
-      max-height: 9999px;
+      max-height: 99999px;
       transform: scaleY(1);
       opacity: 1;
       visibility: visible;

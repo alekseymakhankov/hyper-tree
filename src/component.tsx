@@ -127,6 +127,7 @@ const HyperTreeViewChildren: React.FC<HyperTreeNodeProps> = ({
   depth,
   depthGap = defaultProps.depthGap,
   disableLines,
+  disableTransitions,
   disableVerticalLines,
   node,
   nodeHeight,
@@ -136,6 +137,9 @@ const HyperTreeViewChildren: React.FC<HyperTreeNodeProps> = ({
   ...props
 }) => {
   if (!node.hasChildren()) {
+    return null
+  }
+  if (!node.isOpened() && disableTransitions) {
     return null
   }
   return (
@@ -156,6 +160,7 @@ const HyperTreeViewChildren: React.FC<HyperTreeNodeProps> = ({
         depthGap={depthGap}
         disableLines={disableLines}
         disableVerticalLines={disableVerticalLines}
+        disableTransitions={disableTransitions}
         nodeHeight={nodeHeight}
         verticalLineOffset={verticalLineOffset}
         verticalLineStyles={verticalLineStyles}
@@ -182,7 +187,7 @@ const HyperTreeView = React.forwardRef<HTMLDivElement, HyperTreeViewProps>(
     <div className={classnames(styles.hyperTreeView, classes.level)}>
       {data.map((currentNode: any) => (
         <div
-          key={currentNode.id}
+          key={currentNode.getReactKey()}
           className={classnames(styles.hyperTreeNodeWrapper, classes.parentChildren)}
         >
           <HyperTreeNode classes={classes} depth={depth} node={currentNode} ref={ref} {...props} />

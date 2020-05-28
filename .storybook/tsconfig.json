@@ -13,6 +13,7 @@
       "es2017"
     ],
     "allowJs": false,
+    "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "declaration": true,
     "moduleResolution": "node",
@@ -20,6 +21,7 @@
     "noImplicitReturns": true,
     "noImplicitThis": false,
     "noImplicitAny": true,
+    "resolveJsonModule": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,

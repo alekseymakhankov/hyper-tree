@@ -18,6 +18,7 @@ export interface HyperTreeViewMainProps {
   disableHorizontalLines?: boolean;
   disableLines?: boolean;
   disableVerticalLines?: boolean;
+  disableTransitions?: boolean;
   displayedName?: string | ((node: any) => string);
   draggable?: boolean;
   draggableHandlers: any;

@@ -18,7 +18,6 @@ export interface IUseTreeState {
 export type IDropType = 'before' | 'children' | 'after'
 
 const defaultOptions = {
-  filter: () => true,
   sort: () => 0 as const,
 }
 
@@ -59,8 +58,8 @@ export const useTreeState = ({
       idKey,
       childrenKey,
       defaultOpened,
+      filter,
       enhance: true,
-      filter: filter || defaultOptions.filter,
       sort: sort || defaultOptions.sort,
     },
   ), [data, defaultOpened, filter, id, sort, idKey, childrenKey])

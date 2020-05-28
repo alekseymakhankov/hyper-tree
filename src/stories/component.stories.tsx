@@ -3,12 +3,22 @@ import { storiesOf } from '@storybook/react'
 import TreeView from '../index'
 import { useTreeState } from '../helpers/hooks'
 import { treeHandlers } from '../helpers/treeHandlers'
-import { smallData } from './data'
+// import { smallData } from './data'
+import data from './tree.json'
 import styles from './style.scss'
 
 storiesOf('TreeView', module)
   .add('Base', () => {
-    const filter = React.useCallback(() => true, [])
+    const [value, setValue] = React.useState('')
+    const onChange = React.useCallback(e => {
+      setValue(e.target.value)
+    }, [])
+    const filter = React.useCallback((data) => {
+      if (!value) {
+        return true
+      }
+      return data.data.name.toLowerCase().includes(value.toLowerCase())
+    }, [value])
     const sort = React.useCallback((node: any, siblingNode: any) => {
       if (node.name > siblingNode.name) {
         return 1
@@ -19,7 +29,7 @@ storiesOf('TreeView', module)
       return 0
     }, [])
     const { required, handlers } = useTreeState(
-      { data: smallData, filter, sort, id: 'storyTree', defaultOpened: true, multipleSelect: false },
+      { data, filter: value ? filter : undefined, sort, id: 'storyTree', defaultOpened: true, multipleSelect: false },
     )
     const handleClick = React.useCallback(() => {
       treeHandlers.trees.storyTree.handlers.rerender()
@@ -27,24 +37,26 @@ storiesOf('TreeView', module)
 
     return (
       <>
+      <input type="text" value={value} onChange={onChange} />
         <button type="button" onClick={handleClick}>click</button>
         <TreeView
           {...required}
           {...handlers}
-          depthGap={20}
-          staticNodeHeight={30}
-          verticalLineTopOffset={-10}
+          verticalLineOffset={9}
+          verticalLineTopOffset={-9}
+          disableTransitions={true}
           horizontalLineStyles={{
             stroke: 'black',
             strokeWidth: 1,
-            strokeDasharray: '1 4',
+            strokeDasharray: '1 1',
           }}
           verticalLineStyles={{
             stroke: 'black',
             strokeWidth: 1,
-            strokeDasharray: '1 4',
+            strokeDasharray: '1 1',
           }}
           gapMode="padding"
+          depthGap={20}
           classes={{
             nodeWrapper: styles.nodeWrapper,
             selectedNodeWrapper: styles.selectedNodeWrapper,

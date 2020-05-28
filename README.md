@@ -109,6 +109,7 @@ depthGap? | children indentation related to parent
 disableHorizontalLines? | disable horizontal lines
 disableLines? | disable all lines
 disableVerticalLines? | disable vertical lines
+disableTransitions? | disable transitions (improves performance)
 displayedName? | format node content, if you use default node renderer
 draggable?: | enable draggable mode
 gapMode? | indentation mode
@@ -169,7 +170,8 @@ setNodeChildren | insert node children | (children: TreeNode[], type?: InsertChi
 setOpened | set node opened | (opened?: boolean) => void
 setParent | set node parent | (parent?: TreeNode) => void
 setSelected | set node selected | (selected?: boolean) => void
-getPath | get node path | (array?: boolean): string | string[]
+getPath | get node path | (array?: boolean) => string \| string[]
+getReactKey | returns calculated property for react key | () => string
 
 ## <a id="global-state-manager"></a>Global state manager
 
