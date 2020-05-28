@@ -102,7 +102,7 @@ export const useTreeState = ({
         setSelected(lastId, true)
       }
     }
-    setOpenByPath(path)
+    setOpenByPath(path.split('/').slice(0, -1).join('/'))
   }, [])
 
   const setDragContainer = useCallback((node: TreeNode | string | number, dragContainer?: string | boolean) => {
