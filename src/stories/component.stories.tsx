@@ -9,7 +9,7 @@ import styles from './style.scss'
 storiesOf('TreeView', module)
   .add('Base', () => {
     const [value, setValue] = React.useState('')
-    const onChange = React.useCallback(e => {
+    const onChange = React.useCallback((e) => {
       setValue(e.target.value)
     }, [])
     const filter = React.useCallback((data) => {
@@ -28,22 +28,29 @@ storiesOf('TreeView', module)
       return 0
     }, [])
     const { required, handlers } = useTreeState(
-      { data: smallData, filter: value ? filter : undefined, sort, id: 'storyTree', defaultOpened: false, multipleSelect: false },
+      {
+        data: smallData,
+        filter: value ? filter : undefined,
+        sort,
+        id: 'storyTree',
+        defaultOpened: false,
+        multipleSelect: false,
+      },
     )
     const handleClick = React.useCallback(() => {
-      treeHandlers.trees.storyTree.handlers.setSelectedByPath('/1/63/191/2611')
+      treeHandlers.trees.storyTree.handlers.setSelectedByPath('/1/2/7')
     }, [])
 
     return (
       <>
-      <input type="text" value={value} onChange={onChange} />
+        <input type="text" value={value} onChange={onChange} />
         <button type="button" onClick={handleClick}>click</button>
         <TreeView
           {...required}
           {...handlers}
           verticalLineOffset={9}
           verticalLineTopOffset={-9}
-          disableTransitions={true}
+          disableTransitions
           horizontalLineStyles={{
             stroke: 'black',
             strokeWidth: 1,

@@ -33,14 +33,14 @@ const asyncChildren = [
   },
 ]
 
-// const getChildren = () => new Promise((resolve) => setTimeout(() => resolve(asyncChildren), 1000))
+const getChildren = () => new Promise((resolve) => setTimeout(() => resolve(asyncChildren), 1000))
 
-// const getChildren1 = () => new Promise((resolve) => setTimeout(() => resolve([
-//   {
-//     id: 4,
-//     name: 'Child 2__1',
-//   },
-// ]), 1000))
+const getChildren1 = () => [
+  {
+    id: 4,
+    name: 'Child 2__1',
+  },
+]
 
 
 export const smallData = {
@@ -50,17 +50,12 @@ export const smallData = {
     {
       id: 2,
       name: 'Child 1',
-      children: asyncChildren,
+      getChildren,
     },
     {
       id: 3,
       name: 'Child 2',
-      children: [
-        {
-          id: 4,
-          name: 'Child 2__1',
-        },
-      ],
+      getChildren: getChildren1,
     },
   ],
 }
