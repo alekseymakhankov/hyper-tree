@@ -93,18 +93,6 @@ export const useTreeState = ({
     }
   }, [forceUpdate, treeView, multipleSelect])
 
-  const setSelectedByPath = useCallback((path: string, all = false) => {
-    if (all) {
-      path.split('/').forEach(currentPath => currentPath && setSelected(currentPath, true))
-    } else {
-      const [lastId] = path.split('/').reverse()
-      if (lastId) {
-        setSelected(lastId, true)
-      }
-    }
-    setOpenByPath(path.split('/').slice(0, -1).join('/'))
-  }, [])
-
   const setDragContainer = useCallback((node: TreeNode | string | number, dragContainer?: string | boolean) => {
     if (node instanceof TreeNode) {
       node.setNodeDropContainer(dragContainer)
@@ -187,7 +175,7 @@ export const useTreeState = ({
     setChildren(parent, treeView.staticEnhance(children, parent), type, reset)
   }, [setChildren, treeView])
 
-  const setOpen = useCallback((node: TreeNode | string | number) => {
+  const setOpen = useCallback(async (node: TreeNode | string | number) => {
     let currentNode: TreeNode
 
     if (node instanceof TreeNode) {
@@ -202,13 +190,13 @@ export const useTreeState = ({
 
     if (currentNode.data.getChildren && isFunction(currentNode.data.getChildren) && !currentNode.isOpened()) {
       setLoading(currentNode, true)
-      const result = currentNode.data.getChildren({ node })
-      if (result.then) {
-        result.then((asyncData: IData[]) => {
-          setLoading(node, false)
-          currentNode.setOpened(true)
-          setRawChildren(node, asyncData, 'last', true)
-        })
+      try {
+        const asyncData: IData[] = await currentNode.data.getChildren({ node })
+        setLoading(node, false)
+        currentNode.setOpened(true)
+        setRawChildren(node, asyncData, 'last', true)
+      } catch (e) {
+        console.log('Error on getChildren', e)
       }
     } else {
       currentNode.setOpened(!currentNode.isOpened())
@@ -219,9 +207,21 @@ export const useTreeState = ({
     })
   }, [forceUpdate, treeView, setLoading, setRawChildren])
 
-  const setOpenByPath = useCallback((path: string) => {
-    path.split('/').forEach(currentPath => currentPath && setOpen(currentPath))
-  }, [])
+  const setOpenByPath = useCallback(async (path: string) => {
+    await Promise.all(path.split('/').map((currentPath) => setOpen(currentPath)))
+  }, [setOpen])
+
+  const setSelectedByPath = useCallback(async (path: string, all = false) => {
+    await setOpenByPath(path.split('/').slice(0, -1).join('/'))
+    if (all) {
+      path.split('/').forEach((currentPath) => currentPath && setSelected(currentPath, true))
+    } else {
+      const [lastId] = path.split('/').reverse()
+      if (lastId) {
+        setSelected(lastId, true)
+      }
+    }
+  }, [setSelected, setOpenByPath])
 
   const handleDragStart = useCallback((e: React.DragEvent) => {
     e.stopPropagation()
