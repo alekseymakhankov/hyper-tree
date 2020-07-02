@@ -196,7 +196,7 @@ export const useTreeState = ({
         currentNode.setOpened(true)
         setRawChildren(node, asyncData, 'last', true)
       } catch (e) {
-        console.log('Error on getChildren', e)
+        console.error('react-hyper-tree: Error on getChildren', e)
       }
     } else {
       currentNode.setOpened(!currentNode.isOpened())
@@ -208,7 +208,10 @@ export const useTreeState = ({
   }, [forceUpdate, treeView, setLoading, setRawChildren])
 
   const setOpenByPath = useCallback(async (path: string) => {
-    await Promise.all(path.split('/').map((currentPath) => setOpen(currentPath)))
+    await path.split('/').reduce(async (previousPromise, currentPath) => {
+      await previousPromise
+      await setOpen(currentPath)
+    }, Promise.resolve())
   }, [setOpen])
 
   const setSelectedByPath = useCallback(async (path: string, all = false) => {
