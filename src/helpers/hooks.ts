@@ -75,8 +75,7 @@ export const useTreeState = ({
         forceUpdate()
       }
     }
-    treeHandlers.updateLoadedData(id, treeView.enhancedData)
-  }, [id, forceUpdate, treeView])
+  }, [forceUpdate, treeView])
 
   const setSelected = useCallback((node: TreeNode | string | number, selected?: boolean) => {
     if (!multipleSelect && selected) {
@@ -92,8 +91,7 @@ export const useTreeState = ({
         forceUpdate()
       }
     }
-    treeHandlers.updateLoadedData(id, treeView.enhancedData)
-  }, [id, forceUpdate, treeView, multipleSelect])
+  }, [forceUpdate, treeView, multipleSelect])
 
   const setDragContainer = useCallback((node: TreeNode | string | number, dragContainer?: string | boolean) => {
     if (node instanceof TreeNode) {
@@ -197,7 +195,6 @@ export const useTreeState = ({
         setLoading(node, false)
         currentNode.setOpened(true)
         setRawChildren(node, asyncData, 'last', true)
-        treeHandlers.updateLoadedData(id, treeView.enhancedData)
       } catch (e) {
         console.error('react-hyper-tree: Error on getChildren', e)
       }
@@ -207,9 +204,8 @@ export const useTreeState = ({
     }
     forceUpdate(() => {
       treeView.enhanceNodes()
-      treeHandlers.updateLoadedData(id, treeView.enhancedData)
     })
-  }, [id, forceUpdate, treeView, setLoading, setRawChildren])
+  }, [forceUpdate, treeView, setLoading, setRawChildren])
 
   const setOpenByPath = useCallback(async (path: string) => {
     await path.split('/').reduce(async (previousPromise, currentPath) => {
