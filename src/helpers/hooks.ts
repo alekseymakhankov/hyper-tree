@@ -195,6 +195,7 @@ export const useTreeState = ({
         setLoading(node, false)
         currentNode.setOpened(true)
         setRawChildren(node, asyncData, 'last', true)
+        treeHandlers.updateLoadedData(id, treeView.enhancedData)
       } catch (e) {
         console.error('react-hyper-tree: Error on getChildren', e)
       }
@@ -205,7 +206,7 @@ export const useTreeState = ({
     forceUpdate(() => {
       treeView.enhanceNodes()
     })
-  }, [forceUpdate, treeView, setLoading, setRawChildren])
+  }, [id, forceUpdate, treeView, setLoading, setRawChildren])
 
   const setOpenByPath = useCallback(async (path: string) => {
     await path.split('/').reduce(async (previousPromise, currentPath) => {

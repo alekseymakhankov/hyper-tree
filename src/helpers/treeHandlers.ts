@@ -1,6 +1,7 @@
-import { TreeView } from './node'
+import { TreeView, TreeNode } from './node'
 
 interface ITreeItem {
+  loadedData?: TreeNode[];
   instance: TreeView;
   handlers: IHandlers;
 }
@@ -27,9 +28,14 @@ export class TreeHandlers {
   }
 
   safeUpdate(id: string, tree: TreeView): TreeHandlers {
-    this.trees[id] = {
-      instance: tree,
-      handlers: {},
+    if (this.trees[id]) {
+      this.trees[id].instance = tree
+      this.trees[id].handlers = {}
+    } else {
+      this.trees[id] = {
+        instance: tree,
+        handlers: {},
+      }
     }
     return this
   }
@@ -52,7 +58,12 @@ export class TreeHandlers {
     }
     return this
   }
-}
 
+  updateLoadedData(id: string, data: TreeNode[]) {
+    if (this.trees[id]) {
+      this.trees[id].loadedData = data
+    }
+  }
+}
 
 export const treeHandlers = new TreeHandlers()
