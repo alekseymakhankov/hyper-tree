@@ -75,7 +75,8 @@ export const useTreeState = ({
         forceUpdate()
       }
     }
-  }, [forceUpdate, treeView])
+    treeHandlers.updateLoadedData(id, treeView.enhancedData)
+  }, [id, forceUpdate, treeView])
 
   const setSelected = useCallback((node: TreeNode | string | number, selected?: boolean) => {
     if (!multipleSelect && selected) {
@@ -91,7 +92,8 @@ export const useTreeState = ({
         forceUpdate()
       }
     }
-  }, [forceUpdate, treeView, multipleSelect])
+    treeHandlers.updateLoadedData(id, treeView.enhancedData)
+  }, [id, forceUpdate, treeView, multipleSelect])
 
   const setDragContainer = useCallback((node: TreeNode | string | number, dragContainer?: string | boolean) => {
     if (node instanceof TreeNode) {
@@ -205,6 +207,7 @@ export const useTreeState = ({
     }
     forceUpdate(() => {
       treeView.enhanceNodes()
+      treeHandlers.updateLoadedData(id, treeView.enhancedData)
     })
   }, [id, forceUpdate, treeView, setLoading, setRawChildren])
 
