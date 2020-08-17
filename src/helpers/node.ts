@@ -348,7 +348,7 @@ export class TreeView {
       const newChild: TreeNode = new TreeNode(
         child,
         {
-          opened: opened && !child.getChildren,
+          opened,
           selected: false,
           root: !parentNode,
           leaf: !filteredChildren,
