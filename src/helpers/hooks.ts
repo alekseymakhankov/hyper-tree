@@ -62,7 +62,7 @@ export const useTreeState = ({
       enhance: true,
       sort: sort || defaultOptions.sort,
     },
-  ), [data, defaultOpened, filter, id, sort, idKey, childrenKey])
+  ), [data, filter, id, sort, idKey, childrenKey])
 
   const setLoading = useCallback((node: TreeNode | string | number, loading?: boolean) => {
     if (node instanceof TreeNode) {
@@ -276,7 +276,6 @@ export const useTreeState = ({
       }
     }
   }, [dropNodeId, forceUpdate, treeView, setDragContainer, setSiblings, dropType])
-
 
   treeHandlers
     .safeUpdate(id, treeView)

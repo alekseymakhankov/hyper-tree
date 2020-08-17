@@ -240,6 +240,16 @@ export class TreeView {
     })
   }
 
+  getOpenedNodes(): TreeNode[] {
+    const nodes: TreeNode[] = []
+    this.traverse((node: TreeNode) => {
+      if (node.isOpened()) {
+        nodes.push(node)
+      }
+    })
+    return nodes
+  }
+
   addChildren(parentId: number | string, data: IData[], insertType: InsertChildType = 'first') {
     this._addChildren(this.data, parentId, data, insertType)
   }
@@ -327,10 +337,18 @@ export class TreeView {
         && child[this.options.childrenKey].length !== 0
         ? child[this.options.childrenKey]
         : []
+      let opened = false
+      if (typeof options.defaultOpened === 'boolean') {
+        opened = options.defaultOpened
+      }
+      if (Array.isArray(options.defaultOpened)) {
+        opened = options.defaultOpened.includes(child[options.idKey])
+      }
+
       const newChild: TreeNode = new TreeNode(
         child,
         {
-          opened: !!options.defaultOpened && !child.getChildren,
+          opened: opened && !child.getChildren,
           selected: false,
           root: !parentNode,
           leaf: !filteredChildren,
