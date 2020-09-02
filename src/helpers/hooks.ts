@@ -1,4 +1,5 @@
-import { useMemo, useCallback, useState } from 'react'
+import { useMemo, useCallback, useState, useEffect } from 'react'
+import hash from 'hash-sum'
 import { TreeView, IFilter, ISort, TreeNode, InsertChildType, InsertSiblingType, IData } from './node'
 import { treeHandlers } from './treeHandlers'
 import { isFunction } from './typeCheckers'
@@ -50,10 +51,21 @@ export const useTreeState = ({
   const [dropNodeId, setDropNodeId] = useState<string | number | null>(null)
   const [isDragging, setDragging] = useState(false)
   const [dropType, setDropType] = useState<string | boolean>(false)
+  const [localData, setLocalData] = useState<any>([])
+  useEffect(() => {
+    const formattedData = (Array.isArray(data) ? data : [data])
+
+    const hashFormattedData = hash(formattedData)
+    const hashLocalData = hash(localData)
+
+    if (hashFormattedData !== hashLocalData) {
+      setLocalData(formattedData)
+    }
+  }, [data, localData])
 
   const treeView = useMemo(() => new TreeView(
     id,
-    Array.isArray(data) ? data : [data],
+    localData,
     {
       idKey,
       childrenKey,
@@ -62,7 +74,7 @@ export const useTreeState = ({
       enhance: true,
       sort: sort || defaultOptions.sort,
     },
-  ), [data, filter, id, sort, idKey, childrenKey])
+  ), [localData, filter, id, sort, idKey, childrenKey])
 
   const setLoading = useCallback((node: TreeNode | string | number, loading?: boolean) => {
     if (node instanceof TreeNode) {
