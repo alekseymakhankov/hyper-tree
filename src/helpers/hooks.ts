@@ -187,6 +187,41 @@ export const useTreeState = ({
     setChildren(parent, treeView.staticEnhance(children, parent), type, reset)
   }, [setChildren, treeView])
 
+  const setNodeData = useCallback((node: TreeNode | string | number, dataToSet: IData) => {
+    let currentNode: TreeNode
+
+    if (node instanceof TreeNode) {
+      currentNode = node
+    } else {
+      currentNode = treeView.getNodeById(node)
+    }
+
+    if (!currentNode) {
+      return
+    }
+
+    currentNode.setData(dataToSet)
+    forceUpdate(() => {
+      treeView.enhanceNodes()
+    })
+  }, [forceUpdate, treeView])
+
+  const getNodeData = useCallback((node: TreeNode | string | number) => {
+    let currentNode: TreeNode
+
+    if (node instanceof TreeNode) {
+      currentNode = node
+    } else {
+      currentNode = treeView.getNodeById(node)
+    }
+
+    if (!currentNode) {
+      return null
+    }
+
+    return currentNode.getData()
+  }, [treeView])
+
   const setOpen = useCallback(async (node: TreeNode | string | number) => {
     let currentNode: TreeNode
 
@@ -300,6 +335,8 @@ export const useTreeState = ({
     .safeUpdateHandler(id, 'setRawChildren', setRawChildren)
     .safeUpdateHandler(id, 'setChildren', setChildren)
     .safeUpdateHandler(id, 'setSiblings', setSiblings)
+    .safeUpdateHandler(id, 'setNodeData', setNodeData)
+    .safeUpdateHandler(id, 'getNodeData', getNodeData)
 
   const handlers = useMemo(() => ({
     setChildren,
@@ -308,6 +345,8 @@ export const useTreeState = ({
     setRawChildren,
     setSelected,
     setSiblings,
+    setNodeData,
+    getNodeData,
     draggableHandlers: {
       handleDragStart,
       handleDragEnter,
@@ -325,6 +364,8 @@ export const useTreeState = ({
     setRawChildren,
     setSelected,
     setSiblings,
+    setNodeData,
+    getNodeData,
   ])
 
   return {
