@@ -207,7 +207,7 @@ const Tree: React.FC<HyperTreeViewMainProps> = ({
   const [height, setHeight] = React.useState<number>(staticNodeHeight || 0)
 
   React.useEffect(() => {
-    if (nodeRef.current && !height && !staticNodeHeight) {
+    if (nodeRef.current && !staticNodeHeight) {
       setHeight(nodeRef.current.clientHeight)
     }
 
