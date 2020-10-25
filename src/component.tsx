@@ -207,10 +207,14 @@ const Tree: React.FC<HyperTreeViewMainProps> = ({
   const [height, setHeight] = React.useState<number>(staticNodeHeight || 0)
 
   React.useEffect(() => {
-    if (nodeRef.current && !height && !staticNodeHeight) {
+    if (nodeRef.current && !staticNodeHeight) {
       setHeight(nodeRef.current.clientHeight)
     }
-  }, [height, staticNodeHeight])
+
+  // We have to disable the warnings for this one, because of depending on nodeRef.current.
+  // This has to be defined, because we want to recalculate the size if the ref has changed.
+  // eslint-disable-next-line
+  }, [height, staticNodeHeight, nodeRef.current])
 
   return (
     <div className={classes.treeWrapper}>
