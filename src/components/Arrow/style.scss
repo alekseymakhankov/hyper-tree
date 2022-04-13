@@ -1,9 +1,9 @@
 .hyperNodeArrowIcon {
-  transition: transform 0.1s ease;
-  cursor: pointer;
-  margin-right: 4px;
+    transition: transform 0.1s ease;
+    cursor: pointer;
+    margin-right: 4px;
 
-  &.opened {
-    transform: rotate(90deg);
-  }
+    &.opened {
+        transform: rotate(90deg);
+    }
 }

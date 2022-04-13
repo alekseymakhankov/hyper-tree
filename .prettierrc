@@ -1,0 +1,28 @@
+{
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "semi": false,
+    "useTabs": false,
+    "tabWidth": 4,
+    "printWidth": 120,
+    "trailingComma": "none",
+    "overrides": [
+        {
+            "files": "*.tsx",
+            "options": {
+                "tabWidth": 4,
+                "semi": false,
+                "singleQuote": true,
+                "jsxSingleQuote": false
+            }
+        },
+        {
+            "files": "*.ts",
+            "options": {
+                "tabWidth": 4,
+                "semi": false,
+                "singleQuote": true
+            }
+        }
+    ]
+}

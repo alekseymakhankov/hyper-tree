@@ -4,52 +4,44 @@ import { getDepthPx } from '../../helpers/getDepthPx'
 import styles from './style.scss'
 
 interface RenderVerticalLine {
-  depth: number;
-  depthGap: number;
-  count: number;
-  nodeHeight: number;
-  verticalLineOffset?: number;
-  verticalLineStyles?: React.CSSProperties;
-  verticalLineTopOffset?: number;
+    depth: number
+    depthGap: number
+    count: number
+    nodeHeight: number
+    verticalLineOffset?: number
+    verticalLineStyles?: React.CSSProperties
+    verticalLineTopOffset?: number
+    disableTransitions?: boolean
 }
 
 export const VerticalLine = ({
-  depth,
-  depthGap,
-  count,
-  nodeHeight,
-  verticalLineOffset = defaultProps.verticalLineOffset,
-  verticalLineStyles = defaultProps.verticalLineStyles,
-  verticalLineTopOffset = defaultProps.verticalLineTopOffset,
+    depth,
+    depthGap,
+    count,
+    nodeHeight,
+    disableTransitions,
+    verticalLineOffset = defaultProps.verticalLineOffset,
+    verticalLineStyles = defaultProps.verticalLineStyles,
+    verticalLineTopOffset = defaultProps.verticalLineTopOffset
 }: RenderVerticalLine) => (
-  <div
-    className={styles.verticalLine}
-    style={
-      {
-        left: `${verticalLineOffset}px`,
-        marginLeft: getDepthPx(depth, depthGap),
-        top: `${verticalLineTopOffset}px`,
-      }
-    }
-  >
-    <svg
-      style={
-        {
-          height: `${Math.floor(count * nodeHeight - (nodeHeight ? nodeHeight / 2 : 0)) - verticalLineTopOffset}px`,
-          width: `${verticalLineStyles.strokeWidth}px`,
-          position: 'absolute',
-          transition: 'all 0.2s ease',
-        }
-      }
+    <div
+        className={styles.verticalLine}
+        style={{
+            left: `${verticalLineOffset}px`,
+            marginLeft: getDepthPx(depth, depthGap),
+            top: `${verticalLineTopOffset}px`
+        }}
     >
-      <line
-        x1="0%"
-        y1="0%"
-        x2="0%"
-        y2="100%"
-        className={styles.verticalSvgLine}
-        style={verticalLineStyles}
-      />
-    </svg>
-  </div>
+        <svg
+            style={{
+                height: `${Math.floor(count * nodeHeight - (nodeHeight ? nodeHeight / 2 : 0)) -
+                    verticalLineTopOffset}px`,
+                width: `${verticalLineStyles.strokeWidth}px`,
+                position: 'absolute',
+                transition: disableTransitions ? 'none' : 'all 0.2s ease'
+            }}
+        >
+            <line x1="0%" y1="0%" x2="0%" y2="100%" className={styles.verticalSvgLine} style={verticalLineStyles} />
+        </svg>
+    </div>
 )

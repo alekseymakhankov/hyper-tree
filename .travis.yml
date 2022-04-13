@@ -1,7 +1,7 @@
 sudo: false
 language: node_js
 node_js:
-  - "10"
+    - '14'
 after_script:
-- "npm run test"
-- "npm install coveralls && cat ./coverage/lcov.info | coveralls"
+    - 'npm run test'
+    - 'npm install coveralls && cat ./coverage/lcov.info | coveralls'

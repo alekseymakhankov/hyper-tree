@@ -1,27 +1,27 @@
 .dragZone {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  visibility: hidden;
-  opacity: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    visibility: hidden;
+    opacity: 0;
 
-  &.dragZoneVisible {
-    visibility: visible;
-    opacity: 1;
-  }
-
-  .dragZoneItem {
-    transition: background-color 0.2s ease;
-    background-color: transparent;
-    width: 100%;
-    height: 100%;
-
-    &.dragZoneItemSelected {
-      background-color: rgba(179, 255, 192, 0.5);
+    &.dragZoneVisible {
+        visibility: visible;
+        opacity: 1;
     }
-  }
+
+    .dragZoneItem {
+        transition: background-color 0.2s ease;
+        background-color: transparent;
+        width: 100%;
+        height: 100%;
+
+        &.dragZoneItemSelected {
+            background-color: rgba(179, 255, 192, 0.5);
+        }
+    }
 }

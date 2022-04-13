@@ -4,13 +4,7 @@ import { treeHandlers } from './helpers/treeHandlers'
 
 export default Tree
 
-export {
-  Tree,
-  useTreeState,
-  treeHandlers,
-  IUseTreeState,
-  IDropType,
-}
+export { Tree, useTreeState, treeHandlers, IUseTreeState, IDropType }
 
 export * from './components/Arrow'
 export * from './components/DefaultNode'

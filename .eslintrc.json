@@ -1,66 +1,77 @@
 {
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "jsx": true,
-    "useJSXTextNode": true
-  },
-  "env": {
-    "browser": true,
-    "jest": true
-  },
-  "plugins": [
-    "@typescript-eslint",
-    "react-hooks",
-    "jest"
-  ],
-  "extends": [
-    "airbnb",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:import/typescript"
-  ],
-  "rules": {
-    "semi": [2, "never"],
-    "max-len": ["warn", { "code": 120 }],
-    "no-underscore-dangle": "off",
-    "import/named": "off",
-    "import/export": "off",
-    "import/extensions": "off",
-    "import/prefer-default-export": "off",
-    "import/no-extraneous-dependencies": "off",
-    "jsx-a11y/click-events-have-key-events": "off",
-    "jsx-a11y/no-static-element-interactions": "off",
-    "react/jsx-props-no-spreading": "off",
-    "lines-between-class-members": "off",
-    "no-param-reassign": "off",
-    "object-curly-newline": "off",
-    "max-classes-per-file": "off",
-    "class-methods-use-this": "off",
-    "no-unused-expressions": [
-      "warn",
-      {
-        "allowShortCircuit": true,
-        "allowTernary": true
-      }
-    ],
-    "@typescript-eslint/prefer-interface": "off",
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/interface-name-prefix": "off",
-    "@typescript-eslint/no-explicit-this": "off",
-    "@typescript-eslint/no-this-alias": "off",
-    "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "_" }],
-    "react/jsx-filename-extension": [
-      "warn",
-      {
-        "extensions": [
-          ".jsx",
-          ".tsx"
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "jsx": true,
+        "useJSXTextNode": true
+    },
+    "env": {
+        "browser": true,
+        "jest": true
+    },
+    "plugins": ["@typescript-eslint", "react-hooks", "jest"],
+    "extends": ["airbnb", "plugin:@typescript-eslint/recommended", "plugin:import/typescript"],
+    "rules": {
+        "semi": [2, "never"],
+        "max-len": ["warn", { "code": 120 }],
+        "indent": ["error", 4],
+        "comma-dangle": "off",
+        "implicit-arrow-linebreak": "off",
+        "arrow-parens": "off",
+        "no-underscore-dangle": "off",
+        "operator-linebreak": "off",
+        "no-confusing-arrow": "off",
+        "no-unreachable-loop": "off",
+        "no-continue": "off",
+        "no-await-in-loop": "off",
+        "import/named": "off",
+        "import/export": "off",
+        "import/extensions": "off",
+        "import/prefer-default-export": "off",
+        "import/no-extraneous-dependencies": "off",
+        "jsx-a11y/click-events-have-key-events": "off",
+        "jsx-a11y/no-static-element-interactions": "off",
+        "react/jsx-props-no-spreading": "off",
+        "lines-between-class-members": "off",
+        "no-param-reassign": "off",
+        "object-curly-newline": "off",
+        "max-classes-per-file": "off",
+        "class-methods-use-this": "off",
+        "no-unused-expressions": [
+            "warn",
+            {
+                "allowShortCircuit": true,
+                "allowTernary": true
+            }
+        ],
+        "@typescript-eslint/prefer-interface": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/interface-name-prefix": "off",
+        "@typescript-eslint/no-explicit-this": "off",
+        "@typescript-eslint/no-this-alias": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "_" }],
+        "@typescript-eslint/ban-types": "off",
+        "react/jsx-filename-extension": [
+            "warn",
+            {
+                "extensions": [".jsx", ".tsx"]
+            }
+        ],
+        "jsx-quotes": ["warn", "prefer-double"],
+        "react/jsx-indent": ["warn", 4],
+        "react/jsx-indent-props": ["warn", 4],
+        "react/prop-types": "off",
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+        "react/require-default-props": "off",
+        "react/no-array-index-key": "off",
+        "react/function-component-definition": [
+            "warn",
+            {
+                "namedComponents": "arrow-function",
+                "unnamedComponents": "arrow-function"
+            }
         ]
-      }
-    ],
-    "react/prop-types": "off",
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
-  }
+    }
 }

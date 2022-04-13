@@ -1,29 +1,33 @@
 .hyperTreeView {
-  .hyperTreeNodeWrapper {
-    position: relative;
-    .hyperNodeWrapper {
-      position: relative;
-      opacity: 1;
-    }
+    .hyperTreeNodeWrapper {
+        position: relative;
+        .hyperNodeWrapper {
+            position: relative;
+            opacity: 1;
+        }
 
-    .child {
-      position: relative;
-      transition: all 0.2s ease;
-      transform-origin: top;
-      transform-style: flat;
-      max-height: 99999px;
-      transform: scaleY(1);
-      opacity: 1;
-      visibility: visible;
+        .child {
+            position: relative;
+            transition: all 0.2s ease;
+            transform-origin: top;
+            transform-style: flat;
+            max-height: 99999px;
+            transform: scaleY(1);
+            opacity: 1;
+            visibility: visible;
 
-      &.collapsed {
-        transition: all 0.2s cubic-bezier(0, 1, 0, 1);
-        transform: scaleY(0);
-        max-height: 0;
-        opacity: 0;
-        visibility: hidden;
-        overflow: hidden;
-      }
+            &.collapsed {
+                transition: all 0.2s cubic-bezier(0, 1, 0, 1);
+                transform: scaleY(0);
+                max-height: 0;
+                opacity: 0;
+                visibility: hidden;
+                overflow: hidden;
+            }
+        }
     }
-  }
+}
+
+.selected {
+    background-color: rgba(255, 0, 0, 0.2);
 }

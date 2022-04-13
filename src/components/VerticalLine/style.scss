@@ -1,9 +1,9 @@
 .verticalLine {
-  position: absolute;
-  top: 0;
-  transition: all 0.2s ease;
-
-  .verticalSvgLine {
+    position: absolute;
+    top: 0;
     transition: all 0.2s ease;
-  }
+
+    .verticalSvgLine {
+        transition: all 0.2s ease;
+    }
 }
