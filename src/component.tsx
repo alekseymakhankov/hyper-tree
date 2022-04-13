@@ -215,8 +215,12 @@ const Tree: React.FC<HyperTreeViewMainProps> = ({ classes = defaultProps.classes
 
     React.useLayoutEffect(() => {
         if (nodeRef.current && !staticNodeHeight) {
-            const rect = nodeRef.current.getBoundingClientRect()
-            setHeight(rect.height)
+            setTimeout(() => {
+                const rect = nodeRef.current?.getBoundingClientRect()
+                if (rect) {
+                    setHeight(rect.height)
+                }
+            }, 100)
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [height, staticNodeHeight, nodeRef.current])

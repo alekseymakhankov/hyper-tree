@@ -58,25 +58,7 @@ export const Tree = () => {
             <button type="button" onClick={handleClickUnselect}>
                 unselect
             </button>
-            <TreeView
-                {...required}
-                {...handlers}
-                // verticalLineOffset={0}
-                // verticalLineTopOffset={-9}
-                disableTransitions
-                // horizontalLineStyles={{
-                //     stroke: 'black',
-                //     strokeWidth: 1,
-                //     strokeDasharray: '1 1'
-                // }}
-                // verticalLineStyles={{
-                //     stroke: 'black',
-                //     strokeWidth: 1,
-                //     strokeDasharray: '1 1'
-                // }}
-                gapMode="padding"
-                depthGap={20}
-            />
+            <TreeView {...required} {...handlers} gapMode="padding" depthGap={20} />
         </>
     )
 }
